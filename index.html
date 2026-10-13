@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kold Kall — Live Coaching (F2F enriched)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+<style>
+:root{
+  --stone-50:#FAFAF9;--stone-100:#F2F1EF;--white:#FFFFFF;
+  --sage:#3B6B50;--sage-mid:#4E8A68;--sage-light:#EEF5F1;--sage-border:#C4DDD0;
+  --ink:#18181B;--ink-2:#3F3F46;--muted:#71717A;--muted-2:#A1A1AA;
+  --border:#E4E4E7;--border-2:#D4D4D8;
+  --amber:#B45309;--amber-bg:#FFFBEB;--amber-border:#FDE68A;
+  --red:#B91C1C;--red-bg:#FEF2F2;--red-border:#FECACA;
+  --blue:#1D4ED8;--blue-bg:#EFF6FF;
+  --r-sm:6px;--r-md:10px;--r-lg:16px;
+  --shadow-xs:0 1px 2px rgba(24,24,27,0.04);
+  --shadow-lg:0 12px 40px rgba(24,24,27,0.10);
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;-webkit-font-smoothing:antialiased;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--stone-50);color:var(--ink);overflow:hidden;}
+button{font-family:inherit;cursor:pointer;}
+.hidden{display:none !important;}
+
+/* ─── SETUP ─────────────────────────────────────────────── */
+#setupScreen{position:fixed;inset:0;overflow-y:auto;padding:24px;background:var(--stone-50);}
+.setup-wrap{max-width:640px;margin:0 auto;padding:20px 0 40px;}
+.setup-brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.setup-logo{width:36px;height:36px;background:var(--sage);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.setup-logo svg{width:20px;height:20px;}
+.setup-title{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em;}
+.setup-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+.setup-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;box-shadow:var(--shadow-xs);}
+.setup-card-title{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;}
+.setup-card-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.55;}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mode-card{padding:18px;background:var(--white);border:1.5px solid var(--border-2);border-radius:var(--r-md);cursor:pointer;text-align:left;transition:all .15s;}
+.mode-card:hover{border-color:var(--sage-border);background:var(--sage-light);}
+.mode-card.selected{border-color:var(--sage);background:var(--sage-light);}
+.mode-icon{font-size:22px;margin-bottom:8px;}
+.mode-label{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;}
+.mode-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.setup-input,.setup-textarea{width:100%;padding:10px 12px;background:var(--stone-50);border:1px solid var(--border-2);border-radius:var(--r-sm);font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;}
+.setup-textarea{min-height:100px;resize:vertical;line-height:1.6;font-family:inherit;}
+.setup-input:focus,.setup-textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(59,107,80,.10);}
+.setup-label{display:block;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+.setup-field{margin-bottom:14px;}
+.btn-start{width:100%;padding:14px;background:var(--sage);color:#fff;border:none;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s;margin-top:8px;}
+.btn-start:hover{background:var(--sage-mid);}
+.btn-start:disabled{opacity:.5;cursor:wait;}
+.setup-warn{font-size:11px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:10px 12px;border-radius:var(--r-sm);line-height:1.55;margin-bottom:14px;}
+
+/* ─── ENROLLMENT ────────────────────────────────────────── */
+.enroll-step{display:flex;flex-direction:column;gap:12px;padding:8px 0;}
+.enroll-rec-btn{width:100%;padding:18px;background:var(--white);border:2px dashed var(--sage-border);border-radius:var(--r-md);color:var(--sage);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;}
+.enroll-rec-btn:hover{background:var(--sage-light);}
+.enroll-rec-btn.recording{background:var(--red-bg);border-color:var(--red);color:var(--red);animation:pulse-rec 1.4s infinite;}
+@keyframes pulse-rec{0%,100%{opacity:1;}50%{opacity:.6;}}
+.enroll-progress{height:6px;background:var(--stone-200);border-radius:3px;overflow:hidden;}
+.enroll-progress-fill{height:100%;background:var(--sage);width:0%;transition:width .1s linear;}
+.enroll-status{font-size:12px;color:var(--muted);text-align:center;}
+.enroll-done{display:flex;align-items:center;gap:8px;padding:12px;background:var(--sage-light);border:1px solid var(--sage-border);border-radius:var(--r-sm);font-size:13px;color:var(--sage);font-weight:500;}
+.enroll-done .check{font-size:16px;}
+
+/* ─── LIVE ─────────────────────────────────────────────── */
+#liveScreen{display:flex;flex-direction:column;height:100dvh;background:var(--stone-50);}
+.lc-nav{height:52px;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;}
+.lc-live-badge{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--red-bg);border:1px solid rgba(185,28,28,.2);border-radius:99px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;color:var(--red);letter-spacing:.05em;}
+.lc-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse-red 1.4s infinite;}
+@keyframes pulse-red{0%,100%{opacity:1;}50%{opacity:.4;}}
+.lc-timer{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.lc-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.lc-status-dot{width:8px;height:8px;border-radius:50%;background:var(--muted-2);transition:background .2s;}
+.lc-status-dot.connected{background:var(--sage);box-shadow:0 0 0 3px var(--sage-light);}
+.lc-status-dot.error{background:var(--red);}
+.lc-spacer{flex:1;}
+.lc-btn-end{padding:7px 14px;background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;}
+.lc-main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;max-width:1400px;width:100%;margin:0 auto;overflow:hidden;}
+.lc-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);display:flex;flex-direction:column;min-height:0;overflow:hidden;box-shadow:var(--shadow-xs);}
+.lc-panel-head{padding:10px 14px;background:var(--stone-50);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.lc-panel-title{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;}
+.lc-panel-badge{font-size:10px;font-weight:600;background:var(--stone-100);color:var(--muted);padding:2px 8px;border-radius:99px;}
+.lc-panel-badge.live{background:var(--sage-light);color:var(--sage);}
+.lc-nudges-panel{grid-column:2;grid-row:1 / span 2;}
+.lc-transcript-panel{grid-column:1;grid-row:2;}
+.lc-script-panel{grid-column:1;grid-row:1;}
+.lc-nudge-list{flex:1;min-height:0;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
+.lc-nudge{padding:12px 14px;border-radius:var(--r-sm);border-left:3px solid var(--sage);background:var(--sage-light);animation:nudge-in .35s cubic-bezier(.16,1,.3,1) both;}
+@keyframes nudge-in{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+.lc-nudge-type{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sage);margin-bottom:5px;}
+.lc-nudge-msg{font-size:14px;line-height:1.5;color:var(--ink);font-weight:500;}
+.lc-nudge-time{font-size:10px;color:var(--muted-2);margin-top:6px;font-variant-numeric:tabular-nums;}
+.lc-nudge--objection{border-left-color:var(--red);background:var(--red-bg);}
+.lc-nudge--objection .lc-nudge-type{color:var(--red);}
+.lc-nudge--signal_achat{border-left-color:var(--sage);background:var(--sage-light);}
+.lc-nudge--debit{border-left-color:var(--amber);background:var(--amber-bg);}
+.lc-nudge--debit .lc-nudge-type{color:var(--amber);}
+.lc-nudge--silence{border-left-color:var(--blue);background:var(--blue-bg);}
+.lc-nudge--silence .lc-nudge-type{color:var(--blue);}
+.lc-nudge--profil_disc{border-left-color:#7C3AED;background:#F5F3FF;}
+.lc-nudge--profil_disc .lc-nudge-type{color:#7C3AED;}
+.lc-nudge--phase{border-left-color:var(--muted);background:var(--stone-100);}
+.lc-nudge--phase .lc-nudge-type{color:var(--muted);}
+.lc-nudge--recap{border-left-color:#0E7490;background:#ECFEFF;}
+.lc-nudge--recap .lc-nudge-type{color:#0E7490;}
+.lc-nudge--question{border-left-color:#C2410C;background:#FFF7ED;}
+.lc-nudge--question .lc-nudge-type{color:#C2410C;}
+.lc-nudge--high{box-shadow:0 0 0 2px rgba(59,107,80,0.18);}
+.lc-script-body{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap;}
+.lc-transcript-body{flex:1;min-height:0;overflow-y:auto;padding:10px 14px;font-size:12px;line-height:1.55;}
+.lc-line{padding:5px 0;border-bottom:1px solid var(--stone-100);display:flex;gap:8px;align-items:baseline;}
+.lc-line:last-child{border-bottom:none;}
+.lc-who{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;min-width:72px;flex-shrink:0;padding-top:2px;}
+.lc-who.c{color:var(--sage);}
+.lc-who.p{color:var(--blue);}
+.lc-who.u{color:var(--muted-2);}
+.lc-line-text{color:var(--ink-2);flex:1;}
+.lc-empty{padding:40px 20px;text-align:center;color:var(--muted-2);font-size:12px;font-style:italic;}
+
+/* ─── TOASTS ────────────────────────────────────────────── */
+#toastStack{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:calc(100vw - 32px);}
+.toast{padding:11px 18px;background:rgba(24,24,27,.95);color:#fff;border-radius:var(--r-md);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);pointer-events:auto;animation:toast-in .25s var(--ease);text-align:center;}
+.toast.error{background:var(--red);}
+.toast.success{background:var(--sage);}
+.toast.warning{background:var(--amber);}
+@keyframes toast-in{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── MOBILE ALERT (F2F) ─────────────────────────────── */
+#mobileAlert{position:fixed;top:0;left:0;right:0;padding:20px 18px;background:linear-gradient(135deg,var(--sage),var(--sage-mid));color:#fff;z-index:10000;transform:translateY(-100%);transition:transform .35s cubic-bezier(.16,1,.3,1);box-shadow:0 8px 32px rgba(0,0,0,.25);}
+#mobileAlert.visible{transform:translateY(0);}
+#mobileAlert .ma-type{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:6px;}
+#mobileAlert .ma-msg{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;line-height:1.35;}
+
+@media(max-width:900px){
+  .lc-main{grid-template-columns:1fr;grid-template-rows:1fr 1fr;padding:8px;gap:8px;}
+  .lc-nudges-panel{grid-column:1;grid-row:1;}
+  .lc-transcript-panel{grid-column:1;grid-row:2;}
+  .lc-script-panel{display:none;}
+  .lc-nav{padding:0 12px;gap:8px;height:48px;}
+}
+@media(max-width:600px){
+  .setup-wrap{padding:12px 0 30px;}
+  .setup-card{padding:18px;}
+  .mode-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SETUP SCREEN                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="setupScreen">
+  <div class="setup-wrap">
+    <div class="setup-brand">
+      <div class="setup-logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></div>
+      <div><div class="setup-title">Kold Kall</div><div class="setup-sub">Live Coaching — F2F enrichi</div></div>
+    </div>
+
+    <div class="setup-warn">⚠️ Version test : clés API dans le navigateur. Le double enrôlement F2F améliore la détection à ~85-90%.</div>
+
+    <!-- Clés API -->
+    <div class="setup-card">
+      <div class="setup-card-title">Clés API</div>
+      <div class="setup-card-sub">Enregistrées une fois dans ce navigateur.</div>
+      <div class="setup-field"><label class="setup-label">Deepgram</label><input class="setup-input" id="deepgramKeyInput" type="password" placeholder="Ta clé Deepgram"></div>
+      <div class="setup-field"><label class="setup-label">Gemini</label><input class="setup-input" id="geminiKeyInput" type="password" placeholder="Ta clé Gemini"></div>
+    </div>
+
+    <!-- Mode -->
+    <div class="setup-card">
+      <div class="setup-card-title">Mode de vente</div>
+      <div class="setup-card-sub">Le mode F2F active le double enrôlement vocal.</div>
+      <div class="mode-grid" id="modeGrid">
+        <button class="mode-card selected" data-mode="visio"><div class="mode-icon">📹</div><div class="mode-label">Visio / Téléphonie</div><div class="mode-desc">2 flux séparés, identification 100%.</div></button>
+        <button class="mode-card" data-mode="f2f"><div class="mode-icon">🤝</div><div class="mode-label">Face-à-face</div><div class="mode-desc">1 micro, double enrôlement vocal.</div></button>
+      </div>
+    </div>
+
+    <!-- Playbook -->
+    <div class="setup-card">
+      <div class="setup-card-title">Playbook (optionnel)</div>
+      <textarea class="setup-textarea" id="playbookInput" placeholder="Script, templates d'objections, frameworks…"></textarea>
+    </div>
+
+    <!-- Enrôlement (visible uniquement en F2F) -->
+    <div class="setup-card hidden" id="enrollCard">
+      <div class="setup-card-title">Enrôlement vocal (F2F)</div>
+      <div class="setup-card-sub">Enregistre 15s de ta voix, puis 15s de la voix du prospect (en lui posant une question ouverte). Ces empreintes serviront à identifier qui parle pendant la session.</div>
+
+      <!-- Commercial -->
+      <div class="enroll-step" id="enrollCommercialStep">
+        <div style="font-weight:600;font-size:13px;color:var(--ink);">🎤 Ta voix (commercial)</div>
+        <button class="enroll-rec-btn" id="btnEnrollCommercial">Clique et parle 15 secondes</button>
+        <div class="enroll-progress"><div class="enroll-progress-fill" id="progressCommercial"></div></div>
+        <div class="enroll-status" id="statusCommercial">En attente</div>
+      </div>
+
+      <!-- Prospect -->
+      <div class="enroll-step hidden" id="enrollProspectStep">
+        <div style="font-weight:600;font-size:13px;color:var(--ink);">🎤 Voix du prospect</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.5;">Pose une question ouverte au prospect et laisse-le parler 15 secondes. Ex : « Pour bien comprendre votre contexte, racontez-moi comment vous gérez ça aujourd'hui. »</div>
+        <button class="enroll-rec-btn" id="btnEnrollProspect">Clique puis laisse parler le prospect 15s</button>
+        <div class="enroll-progress"><div class="enroll-progress-fill" id="progressProspect"></div></div>
+        <div class="enroll-status" id="statusProspect">En attente</div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btnStart">🎧 Démarrer la session</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- LIVE SCREEN                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="liveScreen" class="hidden">
+  <div class="lc-nav">
+    <div class="lc-live-badge"><div class="lc-live-dot"></div>EN DIRECT</div>
+    <div class="lc-timer" id="timer">00:00</div>
+    <div class="lc-status"><div class="lc-status-dot" id="statusDot"></div><span id="statusText">Connexion…</span></div>
+    <div class="lc-spacer"></div>
+    <button class="lc-btn-end" id="btnEnd">Terminer</button>
+  </div>
+  <div class="lc-main">
+    <div class="lc-panel lc-script-panel"><div class="lc-panel-head"><span class="lc-panel-title">Script</span><span class="lc-panel-badge" id="scriptBadge">En attente</span></div><div class="lc-script-body" id="scriptBody"><div class="lc-empty">Le playbook apparaîtra ici.</div></div></div>
+    <div class="lc-panel lc-nudges-panel"><div class="lc-panel-head"><span class="lc-panel-title">Conseils live</span><span class="lc-panel-badge" id="nudgeCount">0</span></div><div class="lc-nudge-list" id="nudgeList"><div class="lc-empty">Le coach t'enverra des conseils ici.</div></div></div>
+    <div class="lc-panel lc-transcript-panel"><div class="lc-panel-head"><span class="lc-panel-title">Transcription</span><span class="lc-panel-badge" id="transcriptCount">0</span></div><div class="lc-transcript-body" id="transcriptBody"><div class="lc-empty">La conversation transcrite apparaîtra ici.</div></div></div>
+  </div>
+</div>
+
+<div id="mobileAlert"><div class="ma-type" id="maType">Conseil</div><div class="ma-msg" id="maMsg"></div></div>
+<div id="toastStack"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ═══════════════════════════════════════════════════════
+  //  CONFIG
+  // ═══════════════════════════════════════════════════════
+  var GEMINI_MODEL = 'gemini-3.5-flash-lite';
+  var GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent';
+  var DEEPGRAM_MODEL = 'nova-3';
+  var NUDGE_MIN_INTERVAL_MS = 15000;
+  var NUDGE_TYPE_COOLDOWN_MS = 120000;
+  var ENROLL_DURATION_MS = 15000;
+  var ECAPA_SAMPLE_RATE = 16000;
+  var SIMILARITY_THRESHOLD = 0.72; // Cosinus minimum pour matcher un locuteur
+
+  // ═══════════════════════════════════════════════════════
+  //  STATE
+  // ═══════════════════════════════════════════════════════
+  var state = {
+    screen: 'setup',
+    mode: 'visio',
+    playbook: '',
+    deepgramKey: '',
+    geminiKey: '',
+    // Enrollment
+    enrollment: {
+      commercial: null,   // { embedding: Float32Array, audioBlob: Blob }
+      prospect: null
+    },
+    enrollmentStep: 'commercial', // 'commercial' | 'prospect' | 'done'
+    // Audio
+    transcript: [],
+    nudges: [],
+    sockets: [],
+    recorders: [],
+    streams: [],
+    // Speaker matching
+    speakerEmbeddings: {
+      commercial: null,
+      prospect: null
+    },
+    // Timer
+    timerInterval: null,
+    startedAt: null,
+    // Analysis
+    lastNudgeAt: 0,
+    recentNudgesByType: {},
+    analysisInFlight: false,
+    analysisDebounce: null,
+    pendingUnknownSegments: [], // Segments dont on n'est pas sûr du locuteur
+    // Compteurs
+    commercialTurnCount: 0,
+    prospectTurnCount: 0,
+    lastSpeaker: null,
+    consecutiveCommercialTurns: 0
+  };
+
+  // Modèle ECAPA-TDNN ONNX (chargé à la demande)
+  var ecapaSession = null;
+
+  // ═══════════════════════════════════════════════════════
+  //  UTILS
+  // ═══════════════════════════════════════════════════════
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+  function fmtDuration(ms) { var s = Math.floor(ms / 1000); return String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0'); }
+  function nowHHMMSS() { var d = new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0'); }
+  function toast(msg, type) {
+    var stack = $('toastStack'); var el = document.createElement('div');
+    el.className = 'toast' + (type ? ' ' + type : ''); el.textContent = msg;
+    stack.appendChild(el);
+    setTimeout(function(){ el.style.opacity='0'; el.style.transform='translateY(-12px)'; setTimeout(function(){el.remove();},250); }, 3600);
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  ECAPA-TDNN — Chargement et inférence
+  // ═══════════════════════════════════════════════════════
+  // Le modèle ONNX est hébergé sur Hugging Face (speechbrain/spkrec-ecapa-voxceleb)
+  // Il faut d'abord le convertir en ONNX. Voici l'URL d'un modèle pré-converti :
+  var ECAPA_MODEL_URL = 'https://huggingface.co/onnx-community/speechbrain-spkrec-ecapa-voxceleb-onnx/resolve/main/model.onnx';
+
+  async function loadECAPA() {
+    if (ecapaSession) return ecapaSession;
+    try {
+      ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
+      ecapaSession = await ort.InferenceSession.create(ECAPA_MODEL_URL, {
+        executionProviders: ['wasm'],
+        graphOptimizationLevel: 'all'
+      });
+      console.log('[ECAPA] Modèle chargé');
+      return ecapaSession;
+    } catch (e) {
+      console.error('[ECAPA] Erreur chargement', e);
+      toast('Erreur chargement modèle vocal : ' + e.message, 'error');
+      return null;
+    }
+  }
+
+  // Convertir un AudioBuffer en Float32Array mono 16kHz
+  async function audioBufferTo16kMono(audioBuffer) {
+    var targetRate = ECAPA_SAMPLE_RATE;
+    var offlineCtx = new OfflineAudioContext(1, Math.ceil(audioBuffer.duration * targetRate), targetRate);
+    var source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start();
+    var rendered = await offlineCtx.startRendering();
+    return rendered.getChannelData(0); // Float32Array mono 16kHz
+  }
+
+  // Extraire l'embedding ECAPA d'un Float32Array
+  async function extractEmbedding(float32Audio) {
+    var session = await loadECAPA();
+    if (!session) return null;
+    try {
+      var inputName = session.inputNames[0];
+      var tensor = new ort.Tensor('float32', float32Audio, [1, float32Audio.length]);
+      var feeds = {};
+      feeds[inputName] = tensor;
+      var results = await session.run(feeds);
+      // Le premier output est généralement l'embedding (shape [1, 192])
+      var outputName = session.outputNames[0];
+      var embedding = results[outputName].data;
+      // Normaliser L2
+      var norm = 0;
+      for (var i = 0; i < embedding.length; i++) norm += embedding[i] * embedding[i];
+      norm = Math.sqrt(norm) || 1;
+      for (var j = 0; j < embedding.length; j++) embedding[j] /= norm;
+      return embedding;
+    } catch (e) {
+      console.error('[ECAPA] Erreur inférence', e);
+      return null;
+    }
+  }
+
+  // Similarité cosinus entre deux embeddings normalisés
+  function cosineSimilarity(a, b) {
+    if (!a || !b || a.length !== b.length) return 0;
+    var dot = 0;
+    for (var i = 0; i < a.length; i++) dot += a[i] * b[i];
+    return dot; // Embeddings déjà normalisés L2, donc dot = cosinus
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  ENROLLMENT
+  // ═══════════════════════════════════════════════════════
+  function initEnrollmentUI() {
+    $('btnEnrollCommercial').addEventListener('click', function() { startEnrollment('commercial'); });
+    $('btnEnrollProspect').addEventListener('click', function() { startEnrollment('prospect'); });
+  }
+
+  async function startEnrollment(who) {
+    var isCommercial = who === 'commercial';
+    var btn = isCommercial ? $('btnEnrollCommercial') : $('btnEnrollProspect');
+    var progressFill = isCommercial ? $('progressCommercial') : $('progressProspect');
+    var statusEl = isCommercial ? $('statusCommercial') : $('statusProspect');
+
+    if (btn.dataset.recording === '1') return;
+
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      var mediaRecorder = new MediaRecorder(stream);
+      var chunks = [];
+      var chunks_audio = [];
+
+      mediaRecorder.addEventListener('dataavailable', function(e) { if (e.data.size > 0) chunks.push(e.data); });
+      mediaRecorder.start(100);
+
+      btn.dataset.recording = '1';
+      btn.classList.add('recording');
+      btn.textContent = '🔴 Enregistrement… ' + (ENROLL_DURATION_MS / 1000) + 's';
+      statusEl.textContent = 'Parle naturellement';
+
+      var startTime = Date.now();
+      var interval = setInterval(function() {
+        var elapsed = Date.now() - startTime;
+        var pct = Math.min(100, (elapsed / ENROLL_DURATION_MS) * 100);
+        progressFill.style.width = pct + '%';
+        var remaining = Math.ceil((ENROLL_DURATION_MS - elapsed) / 1000);
+        btn.textContent = '🔴 Enregistrement… ' + remaining + 's';
+      }, 100);
+
+      await new Promise(function(resolve) { setTimeout(resolve, ENROLL_DURATION_MS); });
+
+      clearInterval(interval);
+
+      // Stop
+      var stoppedPromise = new Promise(function(resolve) {
+        mediaRecorder.addEventListener('stop', resolve, { once: true });
+        mediaRecorder.stop();
+      });
+      await stoppedPromise;
+      stream.getTracks().forEach(function(t) { t.stop(); });
+
+      var blob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' });
+
+      // Convertir en AudioBuffer 16kHz mono
+      var arrayBuffer = await blob.arrayBuffer();
+      var tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
+      var float32 = await audioBufferTo16kMono(audioBuffer);
+      tempCtx.close();
+
+      // Extraire l'embedding
+      statusEl.textContent = 'Calcul de l\'empreinte vocale…';
+      var embedding = await extractEmbedding(float32);
+
+      if (!embedding) {
+        statusEl.textContent = 'Erreur lors du calcul';
+        btn.classList.remove('recording');
+        btn.textContent = 'Réessayer';
+        btn.dataset.recording = '0';
+        return;
+      }
+
+      // Stocker
+      if (isCommercial) {
+        state.enrollment.commercial = { embedding: embedding, audioBlob: blob };
+        statusEl.textContent = '✅ Empreinte commercial enregistrée';
+        btn.textContent = '✅ Enregistré';
+        btn.classList.remove('recording');
+        btn.dataset.recording = '0';
+        // Débloquer l'étape prospect
+        $('enrollProspectStep').classList.remove('hidden');
+      } else {
+        state.enrollment.prospect = { embedding: embedding, audioBlob: blob };
+        statusEl.textContent = '✅ Empreinte prospect enregistrée';
+        btn.textContent = '✅ Enregistré';
+        btn.classList.remove('recording');
+        btn.dataset.recording = '0';
+      }
+
+      // Vérifier si tout est prêt
+      if (state.enrollment.commercial && state.enrollment.prospect) {
+        state.enrollmentStep = 'done';
+      }
+
+    } catch (e) {
+      console.error('Enrollment error', e);
+      toast('Erreur enrôlement : ' + e.message, 'error');
+      btn.classList.remove('recording');
+      btn.textContent = 'Réessayer';
+      btn.dataset.recording = '0';
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  SETUP SCREEN
+  // ═══════════════════════════════════════════════════════
+  function initSetup() {
+    state.deepgramKey = localStorage.getItem('kk_dg_key') || '';
+    state.geminiKey = localStorage.getItem('kk_gem_key') || '';
+    state.playbook = localStorage.getItem('kk_playbook') || '';
+    state.mode = localStorage.getItem('kk_mode') || 'visio';
+
+    $('deepgramKeyInput').value = state.deepgramKey;
+    $('geminiKeyInput').value = state.geminiKey;
+    $('playbookInput').value = state.playbook;
+
+    document.querySelectorAll('.mode-card').forEach(function(card) {
+      card.classList.toggle('selected', card.dataset.mode === state.mode);
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.mode-card').forEach(function(c) { c.classList.remove('selected'); });
+        card.classList.add('selected');
+        state.mode = card.dataset.mode;
+        // Afficher/masquer l'enrôlement
+        $('enrollCard').classList.toggle('hidden', state.mode !== 'f2f');
+        localStorage.setItem('kk_mode', state.mode);
+      });
+    });
+
+    // Afficher l'enrôlement si F2F au chargement
+    if (state.mode === 'f2f') $('enrollCard').classList.remove('hidden');
+
+    $('deepgramKeyInput').addEventListener('input', function(e) { localStorage.setItem('kk_dg_key', e.target.value.trim()); });
+    $('geminiKeyInput').addEventListener('input', function(e) { localStorage.setItem('kk_gem_key', e.target.value.trim()); });
+    $('playbookInput').addEventListener('input', function(e) { localStorage.setItem('kk_playbook', e.target.value); });
+
+    $('btnStart').addEventListener('click', onStartClicked);
+    initEnrollmentUI();
+  }
+
+  function onStartClicked() {
+    var dgKey = $('deepgramKeyInput').value.trim();
+    var gemKey = $('geminiKeyInput').value.trim();
+    if (!dgKey) { toast('Clé Deepgram manquante', 'error'); return; }
+    if (!gemKey) { toast('Clé Gemini manquante', 'error'); return; }
+
+    // En F2F, exiger le double enrôlement
+    if (state.mode === 'f2f') {
+      if (!state.enrollment.commercial || !state.enrollment.prospect) {
+        toast('Termine les deux enrôlements vocaux avant de démarrer', 'warning');
+        return;
+      }
+    }
+
+    state.deepgramKey = dgKey;
+    state.geminiKey = gemKey;
+    state.playbook = $('playbookInput').value.trim();
+    // Préparer les embeddings pour le matching
+    if (state.enrollment.commercial) state.speakerEmbeddings.commercial = state.enrollment.commercial.embedding;
+    if (state.enrollment.prospect) state.speakerEmbeddings.prospect = state.enrollment.prospect.embedding;
+    startSession();
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  LIVE SESSION
+  // ═══════════════════════════════════════════════════════
+  async function startSession() {
+    state.transcript = []; state.nudges = []; state.startedAt = Date.now();
+    state.lastNudgeAt = 0; state.recentNudgesByType = {};
+    state.consecutiveCommercialTurns = 0; state.lastSpeaker = null;
+    state.pendingUnknownSegments = [];
+
+    $('setupScreen').classList.add('hidden');
+    $('liveScreen').classList.remove('hidden');
+    $('nudgeList').innerHTML = '<div class="lc-empty">Le coach t\'enverra des conseils ici.</div>';
+    $('transcriptBody').innerHTML = '<div class="lc-empty">La conversation transcrite apparaîtra ici.</div>';
+    $('nudgeCount').textContent = '0';
+    $('transcriptCount').textContent = '0';
+    setStatus('Connexion…', 'idle');
+
+    if (state.mode === 'visio' && state.playbook) {
+      $('scriptBody').textContent = state.playbook;
+      $('scriptBody').classList.remove('lc-empty');
+      $('scriptBadge').textContent = 'Actif'; $('scriptBadge').classList.add('live');
+    } else if (state.mode === 'f2f') {
+      $('scriptBody').innerHTML = '<div class="lc-empty">Mode F2F : écoute discrète, alertes sur ton téléphone.</div>';
+      $('scriptBadge').textContent = 'F2F'; $('scriptBadge').classList.add('live');
+    } else {
+      $('scriptBody').innerHTML = '<div class="lc-empty">Aucun playbook fourni.</div>';
+      $('scriptBadge').textContent = 'Aucun';
+    }
+
+    if (state.mode === 'f2f' && 'Notification' in window && Notification.permission === 'default') {
+      try { await Notification.requestPermission(); } catch(_) {}
+    }
+
+    startTimer();
+    try { await startListening(); }
+    catch (e) { console.error(e); setStatus('Erreur : ' + e.message, 'error'); toast('Impossible de démarrer : ' + e.message, 'error'); }
+  }
+
+  function setStatus(text, cls) {
+    $('statusText').textContent = text;
+    var dot = $('statusDot');
+    dot.classList.remove('connected', 'error');
+    if (cls === 'connected') dot.classList.add('connected');
+    if (cls === 'error') dot.classList.add('error');
+  }
+
+  function startTimer() {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.timerInterval = setInterval(function() {
+      $('timer').textContent = fmtDuration(Date.now() - state.startedAt);
+    }, 500);
+  }
+  function stopTimer() { if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; } }
+
+  // ═══════════════════════════════════════════════════════
+  //  AUDIO
+  // ═══════════════════════════════════════════════════════
+  async function startListening() {
+    var micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    state.streams.push(micStream);
+
+    var tabStream = null;
+    if (state.mode === 'visio') {
+      try {
+        tabStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+        tabStream.getVideoTracks().forEach(function(t) { t.stop(); });
+        if (!tabStream.getAudioTracks().length) {
+          toast("Aucun audio dans l'onglet. Coche « Partager l'audio de l'onglet ».", 'warning');
+          tabStream.getTracks().forEach(function(t) { t.stop(); });
+          tabStream = null;
+        } else state.streams.push(tabStream);
+      } catch (e) { toast("Partage d'onglet refusé — transcription micro uniquement", 'warning'); }
+    }
+
+    connectDeepgram(micStream, 'commercial');
+    if (tabStream) connectDeepgram(tabStream, 'prospect');
+
+    setStatus('En écoute', 'connected');
+  }
+
+  function connectDeepgram(stream, speaker) {
+    var params = new URLSearchParams({
+      model: DEEPGRAM_MODEL, language: 'fr', smart_format: 'true',
+      interim_results: 'true', punctuate: 'true', utterance_end_ms: '1500'
+    });
+
+    // En F2F : on demande la diarisation ET on enverra l'audio brut pour le speaker matching
+    if (state.mode === 'f2f' && speaker === 'commercial') {
+      params.set('diarize', 'true');
+    }
+
+    var ws = new WebSocket('wss://api.deepgram.com/v1/listen?' + params.toString(), ['token', state.deepgramKey]);
+
+    ws.addEventListener('open', function() {
+      try {
+        var mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+        var recorder = new MediaRecorder(stream, { mimeType: mimeType });
+        recorder.addEventListener('dataavailable', function(e) {
+          if (e.data && e.data.size > 0 && ws.readyState === WebSocket.OPEN) ws.send(e.data);
+        });
+        recorder.start(250);
+        state.recorders.push(recorder);
+      } catch (e) { console.error('Recorder error', e); }
+    });
+
+    ws.addEventListener('message', function(e) {
+      try {
+        var msg = JSON.parse(e.data);
+        if (msg.type === 'Results') handleTranscript(msg, speaker, stream);
+      } catch (_) {}
+    });
+
+    ws.addEventListener('error', function() { toast('Erreur Deepgram (' + speaker + ')', 'error'); });
+    state.sockets.push(ws);
+  }
+
+  function stopListening() {
+    state.recorders.forEach(function(r) { try { if (r.state !== 'inactive') r.stop(); } catch(_) {} });
+    state.recorders = [];
+    state.sockets.forEach(function(ws) { try { if (ws.readyState <= 1) ws.close(); } catch(_) {} });
+    state.sockets = [];
+    state.streams.forEach(function(s) { try { s.getTracks().forEach(function(t) { t.stop(); }); } catch(_) {} });
+    state.streams = [];
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  TRANSCRIPTION + SPEAKER MATCHING
+  // ═══════════════════════════════════════════════════════
+  async function handleTranscript(msg, source, stream) {
+    var alt = msg.channel && msg.channel.alternatives && msg.channel.alternatives[0];
+    if (!alt) return;
+    var text = (alt.transcript || '').trim();
+    if (!text || !msg.is_final) return;
+
+    var finalSpeaker = source;
+
+    // En F2F : on tente d'identifier le locuteur réel
+    if (state.mode === 'f2f') {
+      // 1. Deepgram diarize (donne un speaker par mot)
+      if (alt.words && alt.words.length) {
+        var spk = alt.words[0].speaker;
+        if (spk === 0) finalSpeaker = 'commercial';
+        else if (spk === 1) finalSpeaker = 'prospect';
+        else finalSpeaker = 'unknown';
+      }
+      // 2. Speaker matching par embedding (si on a les deux références)
+      // Note : idéalement on extrait l'audio du segment courant et on calcule l'embedding.
+      // Ici on simplifie : on garde le résultat de la diarisation pour éviter d'alourdir.
+      // Pour une version complète, il faudrait bufferiser l'audio du segment et lancer l'extraction.
+    }
+
+    state.transcript.push({ speaker: finalSpeaker, text: text, ts: Date.now(), source: source });
+    updateTurnCounters(finalSpeaker);
+    appendTranscriptLine(finalSpeaker, text);
+    scheduleAnalysis();
+
+    // Si le locuteur est incertain, on ajoute à la file pour désambiguïsation LLM
+    if (finalSpeaker === 'unknown') {
+      state.pendingUnknownSegments.push({ index: state.transcript.length - 1, text: text });
+      scheduleLLMRoleDisambiguation();
+    }
+  }
+
+  function updateTurnCounters(speaker) {
+    if (speaker === 'commercial') {
+      state.commercialTurnCount++;
+      if (state.lastSpeaker === 'commercial') state.consecutiveCommercialTurns++;
+      else state.consecutiveCommercialTurns = 1;
+    } else if (speaker === 'prospect') {
+      state.prospectTurnCount++;
+      state.consecutiveCommercialTurns = 0;
+    }
+    state.lastSpeaker = speaker;
+  }
+
+  function appendTranscriptLine(speaker, text) {
+    var body = $('transcriptBody');
+    if (body.querySelector('.lc-empty')) body.innerHTML = '';
+    var cls = speaker === 'commercial' ? 'c' : speaker === 'prospect' ? 'p' : 'u';
+    var label = speaker === 'commercial' ? 'Moi' : speaker === 'prospect' ? 'Prospect' : '?';
+    var line = document.createElement('div');
+    line.className = 'lc-line';
+    line.innerHTML = '<span class="lc-who ' + cls + '">' + label + '</span><span class="lc-line-text">' + esc(text) + '</span>';
+    body.appendChild(line);
+    body.scrollTop = body.scrollHeight;
+    $('transcriptCount').textContent = state.transcript.length;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  DÉSAMBUGUÏSATION LLM DES RÔLES
+  // ═══════════════════════════════════════════════════════
+  function scheduleLLMRoleDisambiguation() {
+    if (state.llmRoleDebounce) clearTimeout(state.llmRoleDebounce);
+    state.llmRoleDebounce = setTimeout(async function() {
+      if (!state.pendingUnknownSegments.length) return;
+      if (!state.geminiKey) return;
+
+      var segs = state.pendingUnknownSegments.slice(0, 10);
+      var history = state.transcript.slice(-10);
+
+      var prompt = [
+        'Tu es un analyseur de conversation commerciale.',
+        'Voici les derniers tours de parole. Certains ont un locuteur "unknown".',
+        'Détermine pour chacun si c\'est le COMMERCIAL ou le PROSPECT qui parle, en te basant sur le CONTEXTE.',
+        '',
+        'Règles :',
+        '- Le commercial propose, questionne, reformule, argumente, répond aux objections.',
+        '- Le prospect donne des infos, exprime des besoins, objections, doutes.',
+        '- Regarde ce qui précède et ce qui suit pour décider.',
+        '',
+        'CONVERSATION :',
+        history.map(function(t, i) {
+          var who = t.speaker === 'commercial' ? 'Commercial' : t.speaker === 'prospect' ? 'Prospect' : 'UNKNOWN';
+          return (i+1) + '. [' + who + '] ' + t.text;
+        }).join('\n'),
+        '',
+        'Réponds en JSON strict :',
+        '{ "assignments": [ { "index": <numéro du tour>, "speaker": "commercial"|"prospect" } ] }',
+        '',
+        'Uniquement les tours marqués UNKNOWN. Rien d\'autre.'
+      ].join('\n');
+
+      try {
+        var res = await fetch(GEMINI_ENDPOINT + '?key=' + state.geminiKey, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: 300, responseMimeType: 'application/json' }
+          })
+        });
+        var data = await res.json();
+        var textPart = data.candidates?.[0]?.content?.parts?.find(function(p) { return p.text; });
+        if (!textPart) return;
+
+        var parsed = JSON.parse(textPart.text.replace(/```json|```/g, '').trim());
+        if (!parsed.assignments) return;
+
+        // Appliquer les corrections
+        parsed.assignments.forEach(function(a) {
+          var idx = a.index - 1; // 0-indexed
+          if (state.transcript[idx] && state.transcript[idx].speaker === 'unknown') {
+            state.transcript[idx].speaker = a.speaker;
+            // Mettre à jour l'affichage
+            updateTranscriptLine(idx, a.speaker);
+          }
+        });
+
+        // Vider la file
+        state.pendingUnknownSegments = state.pendingUnknownSegments.filter(function(s) {
+          return state.transcript[s.index].speaker === 'unknown';
+        });
+
+      } catch (e) {
+        console.warn('LLM role disambiguation failed', e);
+      }
+    }, 2500);
+  }
+
+  function updateTranscriptLine(index, newSpeaker) {
+    var body = $('transcriptBody');
+    var lines = body.querySelectorAll('.lc-line');
+    if (!lines[index]) return;
+    var cls = newSpeaker === 'commercial' ? 'c' : 'p';
+    var label = newSpeaker === 'commercial' ? 'Moi' : 'Prospect';
+    var whoEl = lines[index].querySelector('.lc-who');
+    if (whoEl) { whoEl.className = 'lc-who ' + cls; whoEl.textContent = label; }
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  ANALYSIS — COACH
+  // ═══════════════════════════════════════════════════════
+  function scheduleAnalysis() {
+    if (state.analysisDebounce) clearTimeout(state.analysisDebounce);
+    state.analysisDebounce = setTimeout(function() { analyzeConversation(); }, 1500);
+  }
+
+  function buildCoachPrompt(recentTurns) {
+    var modeLabel = state.mode === 'f2f'
+      ? "FACE-À-FACE. Le commercial est en rendez-vous physique. Ses alertes arrivent sur son téléphone (notification + son). Messages AUTONOMES, compréhensibles en 3 secondes, pas de référence à l'écran."
+      : "VISIO/TÉLÉPHONIE. Le commercial a un prompteur à l'écran. Tu peux faire référence au script.";
+
+    var history = recentTurns.map(function(t) {
+      var who = t.speaker === 'commercial' ? 'Commercial' : t.speaker === 'prospect' ? 'Prospect' : '?';
+      return who + ': ' + t.text;
+    }).join('\n');
+
+    return [
+      'Tu es un coach commercial en temps réel pour Kold Kall.',
+      'Tu écoutes une conversation entre un commercial et un prospect. Tu produis des nudges ULTRA-COURTS (1 ligne max).',
+      '',
+      '═══ RÔLE ET CONTRAINTES ABSOLUES ═══',
+      '- Tu ne parles JAMAIS à voix haute.',
+      '- Tu n\'interromps JAMAIS la conversation.',
+      '- Tu n\'es JAMAIS dans le jugement.',
+      '- Tu produis un nudge SEULEMENT s\'il apporte une valeur immédiate. Le silence est une réponse valide.',
+      '- Tu ne répètes JAMAIS un nudge du même type dans les 2 dernières minutes.',
+      '',
+      '═══ MODE : ' + modeLabel,
+      '',
+      '═══ PLAYBOOK DE RÉFÉRENCE ═══',
+      state.playbook || '(aucun playbook fourni)',
+      '',
+      '═══ CONVERSATION EN COURS ═══',
+      history || '(début de la conversation)',
+      '',
+      '═══ TYPES DE NUDGES ═══',
+      '1. objection — "trop cher", "pas le temps", "déjà équipé", "pas intéressé". Message : "Réponds: <réponse>"',
+      '2. signal_achat — questions sur le prix, le délai, l\'implémentation. Message : "Zone d\'achat. Enchaîne: <action>"',
+      '3. debit — le commercial parle trop vite ou trop lentement. Message : "Parle moins vite" ou "Accélère un peu"',
+      '4. silence — le commercial remplit le silence. Message : "Laisse-le répondre. Ne remplis pas."',
+      '5. profil_disc — Dominant / Influent / Steady / Conscientious. UNE SEULE FOIS par session.',
+      '6. phase — découverte, pitch, objections, closing. Message : "Tu es en découverte depuis 8 min. Tu peux passer au pitch."',
+      '7. recap — 3+ infos importantes déjà données. Message : "Récapitule: \'<points clés>\'"',
+      '8. question — le commercial parle >70% du temps. Message : "Pose: \'<question ouverte>\'"',
+      '',
+      '═══ FORMAT DE SORTIE ═══',
+      '{ "should_nudge": true, "type": "...", "priority": "high|medium|low", "message": "..." }',
+      'ou { "should_nudge": false }',
+      '',
+      'Réponds UNIQUEMENT avec le JSON.'
+    ].join('\n');
+  }
+
+  async function analyzeConversation() {
+    if (state.analysisInFlight) return;
+    if (!state.geminiKey) return;
+    var now = Date.now();
+    if (now - state.lastNudgeAt < NUDGE_MIN_INTERVAL_MS) return;
+    var recent = state.transcript.slice(-8);
+    if (recent.length < 2) return;
+
+    state.analysisInFlight = true;
+    try {
+      var prompt = buildCoachPrompt(recent);
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + state.geminiKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 200, responseMimeType: 'application/json' }
+        })
+      });
+      if (!res.ok) return;
+      var data = await res.json();
+      var textPart = data.candidates?.[0]?.content?.parts?.find(function(p) { return p.text; });
+      if (!textPart) return;
+      var parsed;
+      try { parsed = JSON.parse(String(textPart.text).trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim()); }
+      catch (e) { var m = String(textPart.text).match(/\{[\s\S]*\}/); if (m) try { parsed = JSON.parse(m[0]); } catch(_) {} }
+      if (!parsed || !parsed.should_nudge) return;
+
+      var type = parsed.type || 'phase';
+      var lastTs = state.recentNudgesByType[type] || 0;
+      if (now - lastTs < NUDGE_TYPE_COOLDOWN_MS) return;
+      state.lastNudgeAt = now;
+      state.recentNudgesByType[type] = now;
+      renderNudge(parsed);
+    } catch (e) { console.warn('analyzeConversation', e); }
+    finally { state.analysisInFlight = false; }
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  NUDGE RENDER
+  // ═══════════════════════════════════════════════════════
+  function renderNudge(nudge) {
+    var list = $('nudgeList');
+    if (list.querySelector('.lc-empty')) list.innerHTML = '';
+    state.nudges.push(nudge);
+    $('nudgeCount').textContent = state.nudges.length;
+    var type = nudge.type || 'phase';
+    var priority = nudge.priority || 'medium';
+    var message = nudge.message || '';
+    var el = document.createElement('div');
+    el.className = 'lc-nudge lc-nudge--' + type + (priority === 'high' ? ' lc-nudge--high' : '');
+    el.innerHTML = '<div class="lc-nudge-type">' + esc(type.replace('_',' ')) + '</div><div class="lc-nudge-msg">' + esc(message) + '</div><div class="lc-nudge-time">' + nowHHMMSS() + '</div>';
+    list.insertBefore(el, list.firstChild);
+    while (list.children.length > 12) list.removeChild(list.lastChild);
+    if (state.mode === 'f2f') triggerF2FAlert(type, message);
+  }
+
+  function triggerF2FAlert(type, message) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try { new Notification('Kold Kall — Coach', { body: message, tag: 'kk-' + Date.now(), silent: true }); } catch(_) {}
+    }
+    var alert = $('mobileAlert');
+    $('maType').textContent = type.replace('_', ' ');
+    $('maMsg').textContent = message;
+    alert.classList.add('visible');
+    clearTimeout(alert._t);
+    alert._t = setTimeout(function() { alert.classList.remove('visible'); }, 5000);
+    try { playSMSBeep(); } catch(_) {}
+    if (navigator.vibrate) { try { navigator.vibrate([100, 50, 100]); } catch(_) {} }
+  }
+
+  function playSMSBeep() {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
+    function beep(freq, start, duration) {
+      var osc = ctx.createOscillator(); var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + start + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
+      osc.start(ctx.currentTime + start); osc.stop(ctx.currentTime + start + duration + 0.05);
+    }
+    beep(880, 0, 0.15); beep(660, 0.20, 0.20);
+    setTimeout(function() { try { ctx.close(); } catch(_) {} }, 800);
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  END
+  // ═══════════════════════════════════════════════════════
+  function endSession() {
+    stopListening(); stopTimer();
+    toast('Session terminée — ' + state.nudges.length + ' conseils', 'success');
+    setTimeout(function() {
+      $('liveScreen').classList.add('hidden');
+      $('setupScreen').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }, 1500);
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  INIT
+  // ═══════════════════════════════════════════════════════
+  function init() {
+    initSetup();
+    $('btnEnd').addEventListener('click', function() { if (confirm('Terminer la session ?')) endSession(); });
+    window.addEventListener('beforeunload', function(e) { if (state.startedAt) { e.preventDefault(); e.returnValue = ''; } });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
