@@ -2786,13 +2786,52 @@ a{color:inherit;text-decoration:none;}
     });
   }
 
-  function init(){
+    async function bootstrapAuth(){
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('code');
+    if (!code) return false;
+    try {
+      var res = await fetch('https://agent-vocal-39hz.onrender.com/api/auth/exchange', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+      });
+      if (!res.ok) return false;
+      var data = await res.json();
+      if (!data.access_token) return false;
+      window.__lc_auth_token = data.access_token;
+      window.__lc_auth_user = data.user;
+      await window.__lc_sb.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token });
+      window.history.replaceState({}, '', window.location.pathname);
+      return true;
+    } catch (e) {
+      console.error('Auth handshake failed', e);
+      return false;
+    }
+  }
+
+  async function init(){
+    var authed = await bootstrapAuth();
+    if (!authed) {
+      var overlay = $('auth-overlay');
+      if (overlay) overlay.classList.add('visible');
+      return;
+    }
     loadPersisted();
     bindEvents();
     renderProspectsList();
-
-    // AJOUT : vérifier les clés au chargement — modal immédiat
     checkKeysAndPrompt();
+    var btnLaunch = $('btn-launch');
+    if (btnLaunch) {
+      btnLaunch.addEventListener('click', function(e){
+        var chk = $('consent-check');
+        if (chk && !chk.checked) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          toast('Merci de cocher la case de consentement avant de lancer', 'warning');
+        }
+      }, true);
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);
