@@ -54,7 +54,7 @@ a{color:inherit;text-decoration:none;}
 .btn-primary{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--sage);color:#fff;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:background var(--t-fast),transform var(--t-fast);white-space:nowrap;}
 .btn-primary:hover{background:var(--sage-mid);}
 .btn-primary:active{transform:scale(.98);}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.btn-primary:disabled{opacity:.5;cursor:wait;}
 .btn-secondary{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--white);color:var(--ink-2);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all var(--t-fast);white-space:nowrap;}
 .btn-secondary:hover{background:var(--stone-100);border-color:var(--muted-2);}
 .btn-secondary:active{transform:scale(.98);}
@@ -200,6 +200,7 @@ a{color:inherit;text-decoration:none;}
 .silence-alert{display:none;align-items:center;gap:6px;padding:5px 11px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.02em;animation:pulse-amber 1.5s infinite;}
 .silence-alert.visible{display:flex;}
 @keyframes pulse-amber{0%,100%{opacity:1;}50%{opacity:.7;}}
+/* AJOUT : bouton mode oreillette */
 .audio-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--stone-100);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all var(--t-fast);}
 .audio-toggle:hover{background:var(--stone-200);}
 .audio-toggle.on{background:var(--sage);color:#fff;border-color:var(--sage);}
@@ -259,6 +260,7 @@ a{color:inherit;text-decoration:none;}
 .suggestion-pill{padding:10px 14px;background:var(--stone-50);border:1px solid var(--border);border-radius:var(--r-md);font-size:13px;color:var(--ink-2);cursor:pointer;text-align:left;transition:all var(--t-fast);line-height:1.5;}
 .suggestion-pill:hover{background:var(--sage-light);border-color:var(--sage-border);color:var(--ink);}
 .suggestion-pill .pill-tag{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;color:var(--sage);display:block;margin-bottom:3px;letter-spacing:.06em;}
+/* AJOUT : style suggestion oreillette */
 .suggestion-pill.ear{background:var(--sage-light);border-color:var(--sage-border);}
 .new-territory{display:none;align-items:center;gap:8px;padding:8px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--amber);margin-bottom:10px;}
 .new-territory.visible{display:flex;}
@@ -302,6 +304,7 @@ a{color:inherit;text-decoration:none;}
 .modal-close:hover{background:var(--stone-100);color:var(--ink);}
 .modal-body{flex:1;padding:22px 24px;overflow-y:auto;}
 .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;}
+/* AJOUT : modal des clés API */
 #modal-keys .modal{width:480px;}
 #modal-keys .modal-body{padding:24px;}
 .keys-field{margin-bottom:16px;}
@@ -315,19 +318,6 @@ a{color:inherit;text-decoration:none;}
 .toast.warning{background:var(--amber);}
 @keyframes toastIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
 .toast-icon{font-size:15px;}
-.auth-overlay{position:fixed;inset:0;background:var(--stone-50);z-index:1500;display:none;align-items:center;justify-content:center;padding:20px;}
-.auth-overlay.visible{display:flex;}
-.auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;max-width:400px;text-align:center;box-shadow:var(--shadow-md);}
-.auth-card h2{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;margin-bottom:10px;color:var(--ink);}
-.auth-card p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;}
-.auth-card a{display:inline-block;padding:10px 20px;background:var(--sage);color:#fff;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-decoration:none;transition:background var(--t-fast);}
-.auth-card a:hover{background:var(--sage-mid);}
-.debrief-overlay{position:fixed;inset:0;background:rgba(24,24,27,.55);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
-.debrief-overlay.visible{display:flex;}
-.debrief-card{background:var(--white);border-radius:var(--r-lg);padding:32px;max-width:400px;text-align:center;box-shadow:var(--shadow-lg);}
-.debrief-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--sage);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px;}
-.debrief-title{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px;color:var(--ink);}
-.debrief-sub{font-size:13px;color:var(--muted);line-height:1.6;}
 @media(max-width:1100px){
   .live-body{grid-template-columns:260px 1fr 300px;}
   .detail-body{grid-template-columns:1fr;}
@@ -350,3 +340,2426 @@ a{color:inherit;text-decoration:none;}
 </style>
 </head>
 <body>
+
+<div id="app">
+  <div class="view active" id="view-prospects">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" x2="12" y1="19" y2="22"/>
+          </svg>
+        </div>
+        <span class="topbar-name">Live<span>Coach</span></span>
+      </div>
+      <nav class="topbar-nav" id="topbar-nav">
+        <button class="nav-btn active" data-view="prospects">Prospects</button>
+        <button class="nav-btn" data-view="setup">Nouveau RDV</button>
+      </nav>
+      <div class="topbar-spacer"></div>
+      <button class="btn-secondary" id="btn-open-keys" title="Modifier les clés API">🔑 Clés API</button>
+      <button class="btn-secondary" id="btn-new-prospect">+ Nouveau prospect</button>
+    </div>
+
+    <div class="prospects-body">
+      <div class="prospects-list-panel">
+        <div class="panel-header">
+          <span class="panel-title">Prospects</span>
+          <button class="btn-ghost" style="padding:4px 8px;" id="btn-add-mini">+ Ajouter</button>
+        </div>
+        <div class="search-input-wrap">
+          <input class="search-input" type="text" id="search-input" placeholder="Rechercher…" autocomplete="off">
+        </div>
+        <div class="prospects-list scrollable" id="prospects-list"></div>
+      </div>
+
+      <div class="prospect-detail-panel">
+        <div class="empty-state" id="prospect-empty">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="empty-title">Sélectionner un prospect</div>
+          <div class="empty-sub">Choisissez un prospect dans la liste ou créez-en un nouveau.</div>
+        </div>
+        <div id="prospect-detail" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+          <div class="detail-topbar">
+            <div style="flex:1;min-width:0;">
+              <div class="detail-prospect-name" id="detail-name">—</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="detail-company-sub">—</div>
+            </div>
+            <span class="badge badge-neutral" id="detail-status-badge">—</span>
+            <button class="btn-primary" id="btn-prepare-rdv">Préparer le RDV →</button>
+          </div>
+          <div class="detail-body scrollable" id="detail-body"></div>
+        </div>
+      </div>
+
+      <div class="rdv-history-panel">
+        <div class="panel-header">
+          <span class="panel-title">Historique RDV</span>
+        </div>
+        <div class="scrollable" style="flex:1;" id="rdv-history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-setup">
+    <div class="wizard-topbar">
+      <button class="btn-ghost" id="btn-wizard-back-to-prospects">← Retour</button>
+      <span class="wizard-title">Préparer le RDV</span>
+      <div class="wizard-steps" id="wizard-steps">
+        <div class="wstep active" data-step="1"><div class="wstep-num">1</div><div class="wstep-label">Votre entreprise</div></div>
+        <div class="wstep-sep"></div>
+        <div class="wstep" data-step="2"><div class="wstep-num">2</div><div class="wstep-label">Le prospect</div></div>
+        <div class="wstep-sep"></div>
+        <div class="wstep" data-step="3"><div class="wstep-num">3</div><div class="wstep-label">Angles & stratégie</div></div>
+        <div class="wstep-sep"></div>
+        <div class="wstep" data-step="4"><div class="wstep-num">4</div><div class="wstep-label">Script & lancement</div></div>
+      </div>
+      <div class="topbar-spacer"></div>
+    </div>
+
+    <div class="wizard-body">
+      <div class="wizard-content scrollable">
+        <div class="wizard-panel active" id="wstep-1">
+          <div class="w-section-title">Votre entreprise</div>
+          <div class="w-section-sub">Ces informations serviront de base à toutes vos sessions. Remplissez-les une fois, elles seront mémorisées automatiquement.</div>
+
+          <div class="w-card">
+            <div class="w-card-header"><div>
+              <div class="w-card-title">Enrichissement automatique</div>
+              <div class="w-card-sub">Entrez votre URL — l'IA analyse votre site et pré-remplit les champs.</div>
+            </div></div>
+            <div class="url-row">
+              <input class="w-input" id="our-url" type="url" placeholder="https://votre-site.fr" autocomplete="off">
+              <button class="btn-fetch" data-fetch="our">Analyser →</button>
+            </div>
+            <div class="fetch-loading" id="our-loading"><div class="spin"></div>Analyse en cours…</div>
+          </div>
+
+          <div class="w-card">
+            <div class="w-fields">
+              <div class="w-field"><label class="w-label">Nom de l'entreprise</label><input class="w-input" id="our-name" placeholder="Ex : SalesBoost" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">Secteur</label><input class="w-input" id="our-sector" placeholder="Ex : SaaS B2B" autocomplete="off"></div>
+              <div class="w-field full"><label class="w-label">Ce que vous vendez</label><textarea class="w-input w-textarea" id="our-product" placeholder="Décrivez votre produit ou service…"></textarea></div>
+              <div class="w-field full"><label class="w-label">Problème résolu</label><textarea class="w-input w-textarea" id="our-problem" placeholder="Quel problème concret résolvez-vous ?"></textarea></div>
+              <div class="w-field full"><label class="w-label">Résultats clients clés (chiffres)</label><textarea class="w-input w-textarea" id="our-results" placeholder="Ex : +34% de taux de conversion, -2h/jour par commercial…"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-panel" id="wstep-2">
+          <div class="w-section-title">Le prospect</div>
+          <div class="w-section-sub">Renseignez les informations disponibles. L'IA complètera ce que vous ne savez pas encore.</div>
+
+          <div class="w-card">
+            <div class="w-card-header"><div>
+              <div class="w-card-title">Enrichissement automatique</div>
+              <div class="w-card-sub">URL du prospect — l'IA analyse son site et les informations publiques disponibles.</div>
+            </div></div>
+            <div class="url-row">
+              <input class="w-input" id="prospect-url" type="url" placeholder="https://site-du-prospect.fr" autocomplete="off">
+              <button class="btn-fetch" data-fetch="prospect">Analyser →</button>
+            </div>
+            <div class="fetch-loading" id="prospect-loading"><div class="spin"></div>Analyse en cours…</div>
+          </div>
+
+          <div class="w-card">
+            <div class="w-fields">
+              <div class="w-field"><label class="w-label">Nom du contact</label><input class="w-input" id="p-contact" placeholder="Prénom Nom" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">Fonction</label><input class="w-input" id="p-role" placeholder="Ex : Directeur Commercial" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">Entreprise</label><input class="w-input" id="p-company" placeholder="Nom de l'entreprise" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">Secteur</label><input class="w-input" id="p-sector" placeholder="Ex : Distribution B2B" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">Taille équipe commerciale</label><input class="w-input" id="p-team-size" placeholder="Ex : 8 commerciaux" autocomplete="off"></div>
+              <div class="w-field"><label class="w-label">CA ou taille</label><input class="w-input" id="p-size" placeholder="Ex : 4M€ / PME 45 salariés" autocomplete="off"></div>
+              <div class="w-field full"><label class="w-label">Problèmes suspectés / connus</label><textarea class="w-input w-textarea" id="p-problems" placeholder="Problèmes que vous pensez identifier chez lui…"></textarea></div>
+              <div class="w-field full"><label class="w-label">Solutions tentées (sans succès)</label><textarea class="w-input w-textarea" id="p-tried" placeholder="Formations, outils, processus déjà tentés…"></textarea></div>
+              <div class="w-field full"><label class="w-label">Comment vos services peuvent l'aider</label><textarea class="w-input w-textarea" id="p-fit" placeholder="Votre hypothèse de valeur pour ce prospect…"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wizard-panel" id="wstep-3">
+          <div class="w-section-title">Angles & stratégie</div>
+          <div class="w-section-sub">L'IA a généré 3 angles d'attaque basés sur 3 mécanismes de persuasion distincts. Sélectionnez ceux qui vous semblent pertinents.</div>
+
+          <div class="w-card" id="angles-loading-card">
+            <div class="fetch-loading visible" style="gap:10px;margin-top:0;">
+              <div class="spin" style="width:16px;height:16px;"></div>Génération des angles stratégiques en cours…
+            </div>
+          </div>
+
+          <div id="angles-container" style="display:none;">
+            <div class="angles-grid" id="angles-grid"></div>
+          </div>
+
+          <div class="w-card" style="margin-top:16px;">
+            <div class="w-card-header"><div>
+              <div class="w-card-title">Hypothèses de déclencheur</div>
+              <div class="w-card-sub">Pourquoi le prospect a dit oui à ce RDV maintenant ?</div>
+            </div></div>
+            <div id="triggers-container" style="display:flex;flex-direction:column;gap:8px;"></div>
+          </div>
+        </div>
+
+        <div class="wizard-panel" id="wstep-4">
+          <div class="w-section-title">Script & lancement</div>
+          <div class="w-section-sub">Choisissez le mode de session, le type de séquence, puis préparez votre script (optionnel).</div>
+
+          <!-- AJOUT : sélecteur de mode Visio/F2F -->
+          <div class="w-card">
+            <div class="w-card-title" style="margin-bottom:14px;">Mode de session</div>
+            <div class="sequence-selector" id="mode-selector" style="grid-template-columns:1fr 1fr;">
+              <button class="seq-btn selected" data-mode="visio">
+                <div class="seq-icon">📹</div>
+                <div class="seq-label">Visio / Téléphonie</div>
+                <div class="seq-desc">Micro + audio onglet<br>Identification 100%</div>
+              </button>
+              <button class="seq-btn" data-mode="f2f">
+                <div class="seq-icon">🤝</div>
+                <div class="seq-label">Face-à-face</div>
+                <div class="seq-desc">Micro unique + diarisation<br>Identification ~85%</div>
+              </button>
+            </div>
+          </div>
+
+          <div class="w-card">
+            <div class="w-card-title" style="margin-bottom:14px;">Type de séquence</div>
+            <div class="sequence-selector" id="sequence-selector">
+              <button class="seq-btn" data-seq="cold_call"><div class="seq-icon">📞</div><div class="seq-label">Cold Call</div><div class="seq-desc">Accroche + prise de RDV</div></button>
+              <button class="seq-btn" data-seq="rdv_decouverte"><div class="seq-icon">🔍</div><div class="seq-label">RDV Découverte</div><div class="seq-desc">Comprendre le besoin</div></button>
+              <button class="seq-btn" data-seq="rdv_complet"><div class="seq-icon">🎯</div><div class="seq-label">RDV Complet</div><div class="seq-desc">Découverte + Demo + Closing</div></button>
+              <button class="seq-btn" data-seq="rdv_demo"><div class="seq-icon">💻</div><div class="seq-label">RDV Démo</div><div class="seq-desc">Montrer la solution</div></button>
+              <button class="seq-btn" data-seq="rdv_closing"><div class="seq-icon">✍️</div><div class="seq-label">RDV Closing</div><div class="seq-desc">Signer le deal</div></button>
+            </div>
+          </div>
+
+          <div class="w-card">
+            <div class="script-toolbar">
+              <div class="w-card-title" id="script-card-title">Script (optionnel)</div>
+              <button class="btn-ai-script" id="btn-generate-script">✨ Créer un script avec l'IA</button>
+            </div>
+            <div class="upload-zone" id="script-upload-zone">
+              <div class="upload-icon">📄</div>
+              <div class="upload-label">Glissez votre script ici ou cliquez pour choisir</div>
+              <div class="upload-sub">PDF, TXT ou DOCX — le script guidera les suggestions en session</div>
+            </div>
+            <textarea class="w-input w-textarea" id="generated-script" style="margin-top:12px;display:none;min-height:180px;" placeholder="Le script généré apparaîtra ici. Vous pouvez le modifier librement."></textarea>
+            <input type="file" id="script-file" accept=".pdf,.txt,.docx" style="display:none">
+          </div>
+
+          <div class="w-card">
+            <div class="w-card-title" style="margin-bottom:14px;">Configuration audio</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="audio-config-msg">
+                Avant de lancer la session, assurez-vous que votre visio est ouverte <strong style="color:var(--ink);">dans un onglet Chrome</strong>. LiveCoach capturera le son de cet onglet pour transcrire le prospect, et votre micro pour vous.
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <div style="padding:12px 14px;background:var(--stone-50);border:1px solid var(--border);border-radius:var(--r-md);font-size:12px;color:var(--muted);flex:1;min-width:180px;">
+                  <div style="font-weight:700;color:var(--ink);margin-bottom:4px;font-family:'DM Sans',sans-serif;">🎤 Votre voix</div>Micro du PC — capturé automatiquement
+                </div>
+                <div id="prospect-audio-card" style="padding:12px 14px;background:var(--stone-50);border:1px solid var(--border);border-radius:var(--r-md);font-size:12px;color:var(--muted);flex:1;min-width:180px;">
+                  <div style="font-weight:700;color:var(--ink);margin-bottom:4px;font-family:'DM Sans',sans-serif;">🔊 Voix prospect</div>Audio de l'onglet de visio — vous devrez autoriser le partage
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-card" style="border-color:var(--sage-border);background:var(--sage-light);">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+              <div>
+                <div style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px;">Tout est prêt ?</div>
+                <div style="font-size:13px;color:var(--muted);">La session démarrera dès que vous autorisez l'accès audio.</div>
+              </div>
+              <button class="btn-primary" id="btn-launch" style="padding:11px 26px;font-size:14px;">Lancer la session</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-footer">
+      <div class="wizard-footer-left" id="wizard-save-indicator">Les modifications sont sauvegardées localement.</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-secondary" id="btn-prev" style="display:none;">← Précédent</button>
+        <button class="btn-primary" id="btn-next">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-live">
+    <div class="live-topbar">
+      <div class="live-indicator"><div class="live-dot"></div>EN DIRECT</div>
+      <div class="live-timer" id="live-timer">00:00</div>
+
+      <div class="phase-pills" id="phase-pills">
+        <div class="phase-pill active" data-phase="1">Découverte</div>
+        <div class="phase-pill" data-phase="2">Récapitulatif</div>
+        <div class="phase-pill" data-phase="3">Challenger</div>
+      </div>
+
+      <div class="debit-gauge">
+        <span class="debit-label">Débit</span>
+        <div class="debit-track"><div class="debit-fill" id="debit-fill"></div></div>
+        <span class="debit-wpm" id="debit-wpm">— mpm</span>
+      </div>
+
+      <div class="quality-gauge">
+        <span class="quality-label" id="quality-label">Découverte</span>
+        <div class="quality-dots" id="quality-dots">
+          <div class="qdot"></div><div class="qdot"></div><div class="qdot"></div>
+          <div class="qdot"></div><div class="qdot"></div><div class="qdot"></div>
+        </div>
+        <span class="quality-pct" id="quality-pct">0 / 6</span>
+      </div>
+
+      <div class="silence-alert" id="silence-alert">⚡ Laissez parler le prospect</div>
+
+      <div class="topbar-spacer"></div>
+      <!-- AJOUT : bouton mode oreillette -->
+      <button class="audio-toggle" id="btn-audio-mode" title="Mode oreillette : conseils en audio">
+        <div class="audio-dot"></div>🎧 Oreillette
+      </button>
+      <button class="btn-ghost" id="btn-end-session" style="font-size:12px;">Terminer →</button>
+    </div>
+
+    <div class="live-body">
+      <div class="col-left">
+        <div class="col-header">
+          <span class="col-title">Infos captées</span>
+          <span class="badge badge-info" id="capture-count">0 capturées</span>
+        </div>
+        <div class="col-left-body scrollable" id="info-cards-zone"></div>
+        <div class="matching-panel" id="matching-panel" style="display:none;">
+          <div class="col-header"><span class="col-title">Matching Prospect → Solution</span></div>
+          <div class="matching-body scrollable" id="matching-body">
+            <div style="padding:16px;font-size:12px;color:var(--muted-2);text-align:center;">Les correspondances apparaîtront au fil de la conversation.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-center">
+        <div class="transcript-zone scrollable" id="transcript-zone">
+          <div class="transcript-inner" id="transcript-inner">
+            <div style="text-align:center;padding:60px 20px;color:var(--muted-2);font-size:13px;">Démarrez l'écoute pour voir la transcription apparaître ici.</div>
+          </div>
+        </div>
+
+        <div class="recap-zone" id="recap-zone">
+          <div class="col-header">
+            <span class="col-title">Récapitulatif à valider</span>
+            <button class="btn-ghost" id="btn-regenerate-recap" style="font-size:11px;">↻ Régénérer</button>
+          </div>
+          <div class="recap-body">
+            <textarea class="recap-textarea" id="recap-text" placeholder="Le récapitulatif sera généré automatiquement…"></textarea>
+          </div>
+          <div class="recap-actions">
+            <button class="btn-secondary" id="btn-back-decouverte">← Revenir à la découverte</button>
+            <button class="btn-primary" id="btn-goto-challenger">Challenger Sale →</button>
+          </div>
+        </div>
+
+        <div class="audio-bar">
+          <div class="audio-source active" id="audio-mic"><div class="dot"></div>Micro</div>
+          <div class="audio-source" id="audio-tab"><div class="dot" style="opacity:.5;"></div>Onglet visio</div>
+          <button class="btn-start-listen" id="btn-start-listen">🎤 Démarrer l'écoute</button>
+          <button class="btn-stop-listen" id="btn-stop-listen">⏹ Arrêter</button>
+        </div>
+
+        <div class="suggestions-zone" id="suggestions-zone">
+          <div class="new-territory" id="new-territory-alert"></div>
+          <div class="suggestions-label">
+            <span>Suggestions de relance</span>
+            <span class="suggestions-age" id="suggestions-age"></span>
+          </div>
+          <div class="suggestion-pills" id="suggestion-pills">
+            <button class="suggestion-pill"><span class="pill-tag">EN ATTENTE</span>Les suggestions apparaîtront au fil de la conversation.</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="col-header"><span class="col-title" id="right-col-title">Script</span></div>
+        <div class="script-zone scrollable" id="script-zone"></div>
+        <div id="right-recap-zone" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
+          <div style="font-size:12px;color:var(--muted-2);text-align:center;padding:20px;line-height:1.6;">Éditez le récapitulatif dans la zone centrale,<br>puis passez au Challenger Sale.</div>
+        </div>
+        <div class="challenger-zone" id="challenger-zone">
+          <div class="challenger-angles" id="challenger-angles"></div>
+          <div class="challenger-sequence scrollable" id="challenger-sequence"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-debrief">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" x2="12" y1="19" y2="22"/>
+          </svg>
+        </div>
+        <span class="topbar-name">Live<span>Coach</span></span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="btn-secondary" id="btn-back-prospects">← Retour aux prospects</button>
+      <button class="btn-primary" id="btn-export-session">Exporter la session</button>
+    </div>
+    <div class="debrief-body scrollable" id="debrief-body"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-prospect">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nouveau prospect</span>
+      <button class="modal-close" data-close="modal-prospect">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="w-field"><label class="w-label">Nom du contact</label><input class="w-input" id="new-p-contact" placeholder="Prénom Nom" autocomplete="off"></div>
+        <div class="w-field"><label class="w-label">Fonction</label><input class="w-input" id="new-p-role" placeholder="Ex : DG" autocomplete="off"></div>
+        <div class="w-field"><label class="w-label">Entreprise</label><input class="w-input" id="new-p-company" placeholder="Nom" autocomplete="off"></div>
+        <div class="w-field"><label class="w-label">Secteur</label><input class="w-input" id="new-p-sector" placeholder="Secteur" autocomplete="off"></div>
+        <div class="w-field"><label class="w-label">Email</label><input class="w-input" id="new-p-email" type="email" autocomplete="off"></div>
+        <div class="w-field"><label class="w-label">Téléphone</label><input class="w-input" id="new-p-phone" autocomplete="off"></div>
+        <div class="w-field" style="grid-column:1/-1;"><label class="w-label">Notes initiales</label><textarea class="w-input w-textarea" id="new-p-notes"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modal-prospect">Annuler</button>
+      <button class="btn-primary" id="btn-save-prospect">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-info-needed">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Informations complémentaires nécessaires</span>
+      <button class="modal-close" data-close="modal-info-needed">✕</button>
+    </div>
+    <div class="modal-body" id="info-needed-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modal-info-needed">Annuler</button>
+      <button class="btn-primary" id="btn-confirm-info">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<!-- AJOUT : modal des clés API -->
+<div class="modal-overlay" id="modal-keys">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Clés API</span>
+      <button class="modal-close" data-close="modal-keys">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="w-card-sub" style="margin-bottom:20px;">Ces clés sont stockées uniquement dans ton navigateur (localStorage). Elles ne sont jamais envoyées à un serveur tiers autre que Deepgram et Gemini.</div>
+      <div class="keys-field">
+        <label class="w-label">Clé API Gemini</label>
+        <input class="w-input" id="key-gemini" type="password" placeholder="Ta clé Gemini (commence par AIza…)" autocomplete="off">
+      </div>
+      <div class="keys-field">
+        <label class="w-label">Clé API Deepgram</label>
+        <input class="w-input" id="key-deepgram" type="password" placeholder="Ta clé Deepgram" autocomplete="off">
+      </div>
+      <div class="keys-link" id="keys-clear">Effacer les clés enregistrées</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close="modal-keys">Annuler</button>
+      <button class="btn-primary" id="btn-save-keys">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  var GEMINI_MODEL = 'gemini-3.8-flash';
+  var GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent';
+
+  var SEQUENCE_CONFIG = {
+    cold_call: {
+      label: 'Cold Call',
+      scriptLabel: 'Script de cold call',
+      phases: ['Accroche', 'Découverte', 'Prise de RDV'],
+      qualityCriteria: ['Pattern-interrupt','Problème ciblé','Impact quantifié','Mini-summary','Challenge posé','RDV obtenu'],
+      infoCards: [
+        { key: 'company', label: '🏢 Entreprise' },
+        { key: 'problem', label: '🎯 Problème principal' },
+        { key: 'impact', label: '📉 Impact chiffré' },
+        { key: 'tried', label: '🔁 Solutions tentées' },
+        { key: 'trigger', label: '⏰ Déclencheur / urgence' },
+        { key: 'verbatim', label: '💬 Verbatim clé' },
+        { key: 'next_step', label: '📅 Prochaine étape' }
+      ],
+      scriptBlocks: [
+        { tag: 'PATTERN-INTERRUPT', text: '« Bonjour [Nom], nous ne nous connaissons pas. Je vais prendre 27 secondes. Si ce n\'est pas pertinent, vous ne réentendrez plus ma voix. C\'est équitable ? »' },
+        { tag: 'PERMISSION', text: '« Je vous appelle parce que je parle à 200-300 [fonction] dans [secteur] qui galèrent avec A. [problème 1] OU B. [problème 2]. C\'est pertinent dans votre monde, ou vous avez déjà la formule magique ? »' },
+        { tag: 'PROBLÈME', text: '« Concrètement, comment vous gérez [sujet] aujourd\'hui ? Qu\'est-ce qui fonctionne, et qu\'est-ce qui vous coince ? »' },
+        { tag: 'IMPACT', text: '« Et si vous chiffrez ce problème-là — ça vous coûte combien par mois ? En temps, en énergie, en CA perdu ? »' },
+        { tag: 'MINI-SUMMARY', text: '« Donc si je résume : [problème], ça vous coûte [impact], et vous avez déjà tenté [tentatives] sans résultat. C\'est bien ça ? »' },
+        { tag: 'CHALLENGE', text: '« Justement, c\'est pour ça que je vous appelle. La plupart des [fonction] pensent que c\'est une fatalité. Ouvert à 15 minutes pour voir comment on a aidé [client similaire] ? »' },
+        { tag: 'CLOSE', text: '« Je vous propose [jour] à [heure] pour 15 minutes. Ça vous va ? »' }
+      ],
+      defaultSuggestions: [
+        { tag: 'PERMISSION', text: '« Je sais que je vous dérange — 30 secondes pour vous dire pourquoi j\'appelle, et vous me dites si ça vaut le coup ? »' },
+        { tag: 'PROBLÈME', text: '« Est-ce que vous avez déjà rencontré ce genre de situation : [scène] ? »' },
+        { tag: 'RDV', text: '« Ça vous dirait qu\'on se prenne 15 minutes pour creuser ça ? »' }
+      ],
+      synthesisTemplate: function(infos){
+        return '« Si je comprends bien — "' + (infos.problem || '[problème]') + '", ça vous coûte "' + (infos.impact || '[impact]') + '", et vous avez déjà tenté "' + (infos.tried || '[tentatives]') + '" sans résultat. C\'est bien ça ? »';
+      },
+      analysisExtra: 'Pour un cold call, évalue si le commercial a utilisé un pattern-interrupt, ciblé le problème, quantifié l\'impact, fait un mini-summary, posé un challenge, et obtenu un RDV.'
+    },
+
+    rdv_decouverte: {
+      label: 'RDV Découverte',
+      scriptLabel: 'Script de découverte',
+      phases: ['Découverte', 'Récapitulatif', 'Challenger'],
+      qualityCriteria: ['Problème identifié','Impact chiffré','Solutions tentées','Urgence déclencheur','Budget / autorité','Verbatim clé'],
+      infoCards: [
+        { key: 'company', label: '🏢 Entreprise' },
+        { key: 'problem', label: '🎯 Problème principal' },
+        { key: 'impact', label: '📉 Impact chiffré' },
+        { key: 'tried', label: '🔁 Solutions tentées' },
+        { key: 'trigger', label: '⏰ Déclencheur / urgence' },
+        { key: 'verbatim', label: '💬 Verbatim clé' },
+        { key: 'budget', label: '📊 Budget / autorité' }
+      ],
+      scriptBlocks: [
+        { tag: 'OUVERTURE', text: '« Je vais vous poser des questions pour bien comprendre votre situation. L\'objectif aujourd\'hui c\'est pas de vous vendre quoi que ce soit — c\'est de voir si ce qu\'on fait peut vraiment vous aider. »' },
+        { tag: 'STATU QUO', text: '« Comment vous gérez aujourd\'hui [le sujet] ? Qu\'est-ce qui fonctionne, et qu\'est-ce qui vous pose problème ? »' },
+        { tag: 'EXCAVATION', text: '« Et ce problème-là — si vous le chiffrez, ça vous coûte combien par mois ? En temps, en énergie, en CA perdu ? »' },
+        { tag: 'URGENCE', text: '« À ce rythme-là — qu\'est-ce qui fait que ça ne peut plus attendre ? Qu\'est-ce qui a changé ces derniers mois ? »' },
+        { tag: 'SYNTHESE', text: '« Si je comprends bien — [problème], ça vous coûte [impact], et vous avez déjà essayé [tentatives] sans résultat. C\'est bien ça ? »' }
+      ],
+      defaultSuggestions: [
+        { tag: 'PERROQUET VOSS', text: '« Vous dites "pas assez de suivi"… qu\'est-ce que vous voulez dire exactement par là ? »' },
+        { tag: 'CREUSER L\'IMPACT', text: '« Et concrètement, qu\'est-ce que ça vous coûte par mois, ce problème-là ? »' },
+        { tag: 'SOLUTIONS PASSÉES', text: '« Qu\'est-ce que vous avez déjà tenté pour régler ça, et qu\'est-ce qui n\'a pas fonctionné ? »' }
+      ],
+      synthesisTemplate: function(infos){
+        return '« Si je comprends bien — "' + (infos.problem || '[problème]') + '", ça vous coûte "' + (infos.impact || '[impact]') + '", et vous avez déjà essayé "' + (infos.tried || '[tentatives]') + '" sans résultat. C\'est bien ça ? »';
+      },
+      analysisExtra: ''
+    },
+
+    rdv_complet: {
+      label: 'RDV Complet',
+      scriptLabel: 'Script de découverte',
+      phases: ['Découverte', 'Récapitulatif', 'Challenger'],
+      qualityCriteria: ['Problème identifié','Impact chiffré','Solutions tentées','Urgence déclencheur','Budget / autorité','Verbatim clé'],
+      infoCards: [
+        { key: 'company', label: '🏢 Entreprise' },
+        { key: 'problem', label: '🎯 Problème principal' },
+        { key: 'impact', label: '📉 Impact chiffré' },
+        { key: 'tried', label: '🔁 Solutions tentées' },
+        { key: 'trigger', label: '⏰ Déclencheur / urgence' },
+        { key: 'verbatim', label: '💬 Verbatim clé' },
+        { key: 'budget', label: '📊 Budget / autorité' }
+      ],
+      scriptBlocks: [
+        { tag: 'OUVERTURE', text: '« Je vais vous poser des questions pour bien comprendre votre situation. L\'objectif aujourd\'hui c\'est pas de vous vendre quoi que ce soit — c\'est de voir si ce qu\'on fait peut vraiment vous aider. »' },
+        { tag: 'STATU QUO', text: '« Comment vous gérez aujourd\'hui [le sujet] ? Qu\'est-ce qui fonctionne, et qu\'est-ce qui vous pose problème ? »' },
+        { tag: 'EXCAVATION', text: '« Et ce problème-là — si vous le chiffrez, ça vous coûte combien par mois ? En temps, en énergie, en CA perdu ? »' },
+        { tag: 'URGENCE', text: '« À ce rythme-là — qu\'est-ce qui fait que ça ne peut plus attendre ? Qu\'est-ce qui a changé ces derniers mois ? »' },
+        { tag: 'SYNTHESE', text: '« Si je comprends bien — [problème], ça vous coûte [impact], et vous avez déjà essayé [tentatives] sans résultat. C\'est bien ça ? »' }
+      ],
+      defaultSuggestions: [
+        { tag: 'PERROQUET VOSS', text: '« Vous dites "pas assez de suivi"… qu\'est-ce que vous voulez dire exactement par là ? »' },
+        { tag: 'CREUSER L\'IMPACT', text: '« Et concrètement, qu\'est-ce que ça vous coûte par mois, ce problème-là ? »' },
+        { tag: 'SOLUTIONS PASSÉES', text: '« Qu\'est-ce que vous avez déjà tenté pour régler ça, et qu\'est-ce qui n\'a pas fonctionné ? »' }
+      ],
+      synthesisTemplate: function(infos){
+        return '« Si je comprends bien — "' + (infos.problem || '[problème]') + '", ça vous coûte "' + (infos.impact || '[impact]') + '", et vous avez déjà essayé "' + (infos.tried || '[tentatives]') + '" sans résultat. C\'est bien ça ? »';
+      },
+      analysisExtra: ''
+    },
+
+    rdv_demo: {
+      label: 'RDV Démo',
+      scriptLabel: 'Script de démo',
+      phases: ['Contexte', 'Démo', 'Objections'],
+      qualityCriteria: ['Besoin confirmé','Feature alignée','Valeur montrée','Réaction prospect','Objection détectée','Prochaine étape'],
+      infoCards: [
+        { key: 'company', label: '🏢 Entreprise' },
+        { key: 'problem', label: '🎯 Problème à résoudre' },
+        { key: 'criteria', label: '✅ Critères de choix' },
+        { key: 'tried', label: '🔁 Solutions tentées' },
+        { key: 'feature', label: '⚙️ Feature clé montrée' },
+        { key: 'reaction', label: '💬 Réaction prospect' },
+        { key: 'next_step', label: '📅 Prochaine étape' }
+      ],
+      scriptBlocks: [
+        { tag: 'TRANSITION', text: '« Avant de vous montrer l\'outil, je veux m\'assurer qu\'on se concentre sur ce qui compte pour vous. Vous m\'aviez dit que [problème] était votre priorité — c\'est toujours le cas ? »' },
+        { tag: 'BENEFIT', text: '« Ce qu\'on va voir aujourd\'hui, c\'est comment [notre solution] aide [type de client] à [bénéfice principal]. Je commence par [feature 1], et après on regarde [feature 2] si ça résonne. »' },
+        { tag: 'DEMO', text: '« Regardez ici — c\'est exactement ce qui se passe quand [scène spécifique du problème du prospect]. En deux clics, vous avez [résultat concret]. »' },
+        { tag: 'PROOF', text: '« [Client similaire] avait exactement le même problème. Après 3 mois, ils ont [résultat chiffré]. C\'est le genre de résultat que vous cherchez ? »' },
+        { tag: 'OBJECTION', text: '« Vous semblez hésiter sur [point]. Qu\'est-ce qui vous ferait dire que c\'est la bonne solution pour vous ? »' },
+        { tag: 'NEXT STEP', text: '« Si on récapitule : [bénéfice 1], [bénéfice 2]. La prochaine étape logique serait [next step concret]. On se cale [date] ? »' }
+      ],
+      defaultSuggestions: [
+        { tag: 'RÉSONANCE', text: '« Est-ce que ce que vous voyez là correspond à ce que vous attendiez ? »' },
+        { tag: 'OBJECTION', text: '« Qu\'est-ce qui vous ferait hésiter à aller plus loin ? »' },
+        { tag: 'NEXT STEP', text: '« On peut caler un prochain point pour [objectif concret] ? »' }
+      ],
+      synthesisTemplate: function(infos){
+        return '« Donc concrètement vous pourriez [bénéfice 1] et [bénéfice 2]. Est-ce que c\'est ce qui vous intéresse le plus ? »';
+      },
+      analysisExtra: 'Pour une démo, évalue si le commercial a confirmé le besoin, aligné la feature, montré la valeur, capté la réaction du prospect, détecté les objections, et posé une prochaine étape.'
+    },
+
+    rdv_closing: {
+      label: 'RDV Closing',
+      scriptLabel: 'Script de closing',
+      phases: ['Rappel', 'Proposition', 'Closing'],
+      qualityCriteria: ['Enjeux rappelés','Prix présenté','Conditions posées','Objection traitée','Accord obtenu','Next steps contractualisés'],
+      infoCards: [
+        { key: 'company', label: '🏢 Entreprise' },
+        { key: 'problem', label: '🎯 Enjeu principal' },
+        { key: 'impact', label: '📉 Coût de l\'inaction' },
+        { key: 'price', label: '💰 Prix présenté' },
+        { key: 'conditions', label: '📋 Conditions' },
+        { key: 'objection', label: '⚠️ Objection' },
+        { key: 'decision', label: '✅ Décision' },
+        { key: 'next_step', label: '📅 Prochaine étape' }
+      ],
+      scriptBlocks: [
+        { tag: 'RAPPEL ENJEUX', text: '« Pour qu\'on soit alignés : vous m\'aviez dit que [problème] coûtait [impact] par mois, et que c\'était devenu intenable. C\'est toujours le cas ? »' },
+        { tag: 'PROPOSITION', text: '« Voilà ce que je vous propose : [offre], avec [conditions]. Le prix est de [prix]. Est-ce que ça correspond à ce que vous imaginiez ? »' },
+        { tag: 'CONDITIONS', text: '« On peut démarrer [date]. Il faut [prérequis]. Qui d\'autre doit valider ? »' },
+        { tag: 'OBJECTIONS', text: '« Vous semblez hésiter sur [objection]. Qu\'est-ce qui vous ferait dire que c\'est la bonne décision ? »' },
+        { tag: 'CLOSE', text: '« Si tout est clair, on peut signer aujourd\'hui. Je vous envoie le contrat dans l\'heure. Vous le signez électroniquement. On démarre [date]. Ça vous va ? »' },
+        { tag: 'NEXT STEPS', text: '« Pour récapituler : je vous envoie [contrat], vous validez [step], on démarre [date]. Point de suivi [date]. »' }
+      ],
+      defaultSuggestions: [
+        { tag: 'ENJEU', text: '« Qu\'est-ce qui vous ferait dire que c\'est le bon moment ? »' },
+        { tag: 'OBJECTION', text: '« Qu\'est-ce qui vous manque pour être à 100% confiant ? »' },
+        { tag: 'CLOSE', text: '« On peut démarrer [date]. Je vous envoie le contrat aujourd\'hui. »' }
+      ],
+      synthesisTemplate: function(infos){
+        return '« On peut démarrer [date]. Je vous envoie le contrat aujourd\'hui. »';
+      },
+      analysisExtra: 'Pour un closing, évalue si le commercial a rappelé les enjeux, présenté le prix, posé les conditions, traité les objections, obtenu un accord, et défini les next steps.'
+    }
+  };
+
+  var state = {
+    ourCompany: {},
+    prospects: [],
+    searchQuery: '',
+    selectedProspect: null,
+    wizardStep: 1,
+    generatedAngles: [],
+    selectedAngles: [],
+    generatedTriggers: [],
+    scriptContent: null,
+    sequenceType: null,
+    sequenceConfig: null,
+    sessionMode: 'visio',
+    phase: 1,
+    sessionStartTime: null,
+    timerInterval: null,
+    audioSessions: [],
+    micStream: null,
+    tabStream: null,
+    transcript: [],
+    currentBubbles: { commercial: null, prospect: null },
+    interimEls: { commercial: null, prospect: null },
+    capturedInfos: {
+      company: null, problem: null, impact: null,
+      tried: null, trigger: null, verbatim: null, budget: null,
+      criteria: null, feature: null, reaction: null, next_step: null,
+      price: null, conditions: null, objection: null, decision: null
+    },
+    capturedCount: 0,
+    qualityScore: 0,
+    analysisToken: 0,
+    analysisDebounce: null,
+    commercialWordTimes: [],
+    silenceInterval: null,
+    selectedChallengerAngle: 0,
+    sessionData: null,
+    audioMode: false,
+    pendingUnknownSegments: [],
+    llmRoleDebounce: null
+  };
+
+  var lastRecapText = '';
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+  function setVal(id, v){ var el = $(id); if (el) el.value = v || ''; }
+
+  function toast(msg, type){
+    var stack = $('toast-stack');
+    var el = document.createElement('div');
+    el.className = 'toast' + (type ? ' ' + type : '');
+    var icon = type === 'error' ? '✕' : type === 'warning' ? '⚠' : '✓';
+    el.innerHTML = '<span class="toast-icon">' + icon + '</span>' + esc(msg);
+    stack.appendChild(el);
+    setTimeout(function(){
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(20px)';
+      setTimeout(function(){ el.remove(); }, 220);
+    }, 3400);
+  }
+
+  function nowTime(){
+    var d = new Date();
+    return String(d.getMinutes()).padStart(2,'0') + ':' + String(d.getSeconds()).padStart(2,'0');
+  }
+
+  function parseGeminiJSON(text){
+    if (!text) throw new Error('Réponse vide');
+    var cleaned = String(text).trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+    try { return JSON.parse(cleaned); } catch(_) {}
+    var objMatch = cleaned.match(/\{[\s\S]*\}/);
+    var arrMatch = cleaned.match(/\[[\s\S]*\]/);
+    var candidates = [objMatch && objMatch[0], arrMatch && arrMatch[0]].filter(Boolean);
+    for (var i = 0; i < candidates.length; i++) {
+      try { return JSON.parse(candidates[i]); } catch(_) {}
+    }
+    for (var j = 0; j < candidates.length; j++) {
+      var fixed = candidates[j].replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'").replace(/,\s*([}\]])/g, '$1');
+      try { return JSON.parse(fixed); } catch(_) {}
+    }
+    throw new Error('JSON invalide');
+  }
+
+  function getGeminiKey(){ return localStorage.getItem('gemini_key') || ''; }
+  function getDeepgramKey(){ return localStorage.getItem('deepgram_key') || ''; }
+
+  // ═══ MODAL DES CLÉS API ═══
+  function openKeysModal(){
+    $('key-gemini').value = getGeminiKey();
+    $('key-deepgram').value = getDeepgramKey();
+    openModal('modal-keys');
+  }
+  function saveKeys(){
+    var gk = $('key-gemini').value.trim();
+    var dk = $('key-deepgram').value.trim();
+    if (gk) localStorage.setItem('gemini_key', gk); else localStorage.removeItem('gemini_key');
+    if (dk) localStorage.setItem('deepgram_key', dk); else localStorage.removeItem('deepgram_key');
+    closeModal('modal-keys');
+    toast('Clés enregistrées', 'success');
+  }
+  function clearKeys(){
+    if (!confirm('Effacer les clés enregistrées ?')) return;
+    localStorage.removeItem('gemini_key');
+    localStorage.removeItem('deepgram_key');
+    $('key-gemini').value = '';
+    $('key-deepgram').value = '';
+    toast('Clés effacées', 'warning');
+  }
+  function checkKeysAndPrompt(){
+    if (!getGeminiKey() || !getDeepgramKey()){
+      openKeysModal();
+    }
+  }
+
+  function switchView(name){
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+    var view = $('view-' + name);
+    if (view) view.classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.view === name);
+    });
+    if (name === 'prospects') renderProspectsList();
+  }
+
+  function openModal(id){ var el = $(id); if (el) el.classList.add('open'); }
+  function closeModal(id){ var el = $(id); if (el) el.classList.remove('open'); }
+
+  function saveProspects(){ localStorage.setItem('lc_prospects', JSON.stringify(state.prospects)); }
+  function saveOurCompany(){ localStorage.setItem('lc_our_company', JSON.stringify(state.ourCompany)); }
+
+  function loadPersisted(){
+    try { state.prospects = JSON.parse(localStorage.getItem('lc_prospects') || '[]'); } catch(_) { state.prospects = []; }
+    try { state.ourCompany = JSON.parse(localStorage.getItem('lc_our_company') || '{}'); } catch(_) { state.ourCompany = {}; }
+    state.searchQuery = localStorage.getItem('lc_search') || '';
+    var si = $('search-input');
+    if (si) si.value = state.searchQuery;
+  }
+
+  function renderProspectsList(){
+    var list = $('prospects-list');
+    if (!list) return;
+    if (!state.prospects.length) {
+      list.innerHTML = '<div class="empty-state" style="margin-top:40px;"><div class="empty-icon">📁</div><div class="empty-sub">Aucun prospect<br>Cliquez sur "+ Ajouter"</div></div>';
+      return;
+    }
+    var q = state.searchQuery.toLowerCase();
+    var filtered = state.prospects.map(function(p, i){ return { p: p, i: i }; }).filter(function(item){
+      if (!q) return true;
+      var hay = [item.p.contact, item.p.company, item.p.role, item.p.sector, item.p.email].filter(Boolean).join(' ').toLowerCase();
+      return hay.indexOf(q) > -1;
+    });
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty-state" style="margin-top:40px;"><div class="empty-sub">Aucun résultat pour "' + esc(state.searchQuery) + '"</div></div>';
+      return;
+    }
+    list.innerHTML = filtered.map(function(item){
+      var p = item.p;
+      var initials = (p.contact || p.company || 'XX').slice(0, 2).toUpperCase();
+      return '<div class="prospect-row ' + (state.selectedProspect === item.i ? 'selected' : '') + '" data-idx="' + item.i + '">' +
+        '<div class="prospect-avatar">' + esc(initials) + '</div>' +
+        '<div class="prospect-info">' +
+          '<div class="prospect-name">' + esc(p.contact || 'Sans nom') + '</div>' +
+          '<div class="prospect-company">' + esc(p.company || '—') + (p.role ? ' · ' + esc(p.role) : '') + '</div>' +
+          '<div class="prospect-meta">' +
+            (p.sector ? '<span class="badge badge-neutral">' + esc(p.sector) + '</span>' : '') +
+            (p.rdvHistory && p.rdvHistory.length ? '<span class="badge badge-success">' + p.rdvHistory.length + ' RDV</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function selectProspect(i){
+    state.selectedProspect = i;
+    renderProspectsList();
+    var p = state.prospects[i];
+    if (!p) return;
+    $('prospect-empty').style.display = 'none';
+    $('prospect-detail').style.display = 'flex';
+    $('detail-name').textContent = p.contact || p.company || '—';
+    $('detail-company-sub').textContent = [p.role, p.company, p.sector, p.email].filter(Boolean).join(' · ') || '—';
+    var sb = $('detail-status-badge');
+    var rdvCount = (p.rdvHistory && p.rdvHistory.length) || 0;
+    sb.textContent = rdvCount === 0 ? 'Nouveau' : rdvCount + ' RDV';
+    sb.className = 'badge ' + (rdvCount === 0 ? 'badge-neutral' : 'badge-success');
+
+    var fg = function(title, rows){
+      var items = rows.filter(function(r){ return r[1]; }).map(function(r){
+        return '<div class="field-row"><div class="field-label">' + esc(r[0]) + '</div><div class="field-value">' + esc(r[1]) + '</div></div>';
+      }).join('');
+      if (!items) return '';
+      return '<div class="field-group"><div class="field-group-title">' + esc(title) + '</div>' + items + '</div>';
+    };
+
+    $('detail-body').innerHTML =
+      fg('Contact', [['Nom', p.contact], ['Fonction', p.role], ['Email', p.email], ['Téléphone', p.phone]]) +
+      fg('Entreprise', [['Société', p.company], ['Secteur', p.sector], ['Taille', p.size], ['Équipe commer.', p.teamSize]]) +
+      fg('Contexte commercial', [['Problèmes', p.problems], ['Solutions tentées', p.tried], ['Notre fit', p.fit]]) +
+      (p.impact ? fg('Captation live', [['Impact chiffré', p.impact], ['Déclencheur', p.trigger], ['Verbatim', p.verbatim], ['Budget', p.budget]]) : '') +
+      (p.notes ? fg('Notes', [['', p.notes]]) : '');
+
+    var hist = $('rdv-history-list');
+    if (p.rdvHistory && p.rdvHistory.length) {
+      hist.innerHTML = p.rdvHistory.slice().reverse().map(function(r){
+        return '<div class="rdv-entry">' +
+          '<div class="rdv-date">' + esc(r.date) + '</div>' +
+          '<div class="rdv-label">' + esc(r.sequenceLabel || 'Session') + '</div>' +
+          '<div class="rdv-summary">' + esc(r.summary || 'Aucun résumé') + '</div>' +
+        '</div>';
+      }).join('');
+    } else {
+      hist.innerHTML = '<div class="empty-state" style="margin-top:40px;"><div class="empty-icon" style="font-size:24px;">📋</div><div class="empty-sub">Aucun RDV enregistré<br>pour ce prospect.</div></div>';
+    }
+  }
+
+  function saveNewProspect(){
+    var p = {
+      contact: $('new-p-contact').value.trim(),
+      role: $('new-p-role').value.trim(),
+      company: $('new-p-company').value.trim(),
+      sector: $('new-p-sector').value.trim(),
+      email: $('new-p-email').value.trim(),
+      phone: $('new-p-phone').value.trim(),
+      notes: $('new-p-notes').value.trim(),
+      rdvHistory: [],
+      createdAt: new Date().toISOString()
+    };
+    if (!p.contact && !p.company) { toast('Renseignez au moins un nom ou une entreprise', 'warning'); return; }
+    state.prospects.push(p);
+    saveProspects();
+    renderProspectsList();
+    closeModal('modal-prospect');
+    ['new-p-contact','new-p-role','new-p-company','new-p-sector','new-p-email','new-p-phone','new-p-notes'].forEach(function(id){ var el = $(id); if (el) el.value = ''; });
+    selectProspect(state.prospects.length - 1);
+    toast('Prospect enregistré', 'success');
+  }
+
+  function initWizard(prospectIdx){
+    state.wizardStep = 1;
+    state.generatedAngles = [];
+    state.selectedAngles = [];
+    state.generatedTriggers = [];
+    state.scriptContent = null;
+    state.sequenceType = null;
+    state.sequenceConfig = null;
+    state.sessionMode = 'visio';
+
+    if (prospectIdx !== undefined) state.selectedProspect = prospectIdx;
+
+    if (state.selectedProspect !== null && state.prospects[state.selectedProspect]) {
+      var p = state.prospects[state.selectedProspect];
+      setVal('p-contact', p.contact);
+      setVal('p-role', p.role);
+      setVal('p-company', p.company);
+      setVal('p-sector', p.sector);
+      setVal('p-size', p.size);
+      setVal('p-team-size', p.teamSize);
+      setVal('p-problems', p.problems);
+      setVal('p-tried', p.tried);
+      setVal('p-fit', p.fit);
+    } else {
+      ['p-contact','p-role','p-company','p-sector','p-size','p-team-size','p-problems','p-tried','p-fit'].forEach(function(id){ setVal(id, ''); });
+    }
+
+    var our = state.ourCompany || {};
+    setVal('our-name', our.name);
+    setVal('our-sector', our.sector);
+    setVal('our-product', our.product);
+    setVal('our-problem', our.problem);
+    setVal('our-results', our.results);
+
+    var zone = $('script-upload-zone');
+    if (zone) {
+      zone.classList.remove('has-file');
+      zone.innerHTML = '<div class="upload-icon">📄</div><div class="upload-label">Glissez votre script ici ou cliquez pour choisir</div><div class="upload-sub">PDF, TXT ou DOCX — le script guidera les suggestions en session</div>';
+    }
+    var gs = $('generated-script');
+    if (gs) { gs.value = ''; gs.style.display = 'none'; }
+    document.querySelectorAll('#sequence-selector .seq-btn').forEach(function(b){ b.classList.remove('selected'); });
+    document.querySelectorAll('#mode-selector .seq-btn').forEach(function(b){ b.classList.toggle('selected', b.dataset.mode === 'visio'); });
+    var sct = $('script-card-title');
+    if (sct) sct.textContent = 'Script (optionnel)';
+
+    goToWizardStep(1);
+    switchView('setup');
+  }
+
+  function goToWizardStep(n){
+    state.wizardStep = n;
+    document.querySelectorAll('.wizard-panel').forEach(function(p){ p.classList.remove('active'); });
+    var el = $('wstep-' + n);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.wstep').forEach(function(s){
+      var sn = parseInt(s.dataset.step, 10);
+      s.classList.toggle('active', sn === n);
+      s.classList.toggle('done', sn < n);
+    });
+    $('btn-prev').style.display = n > 1 ? '' : 'none';
+    $('btn-next').style.display = n === 4 ? 'none' : '';
+    $('btn-next').textContent = 'Suivant →';
+    if (n === 3 && state.generatedAngles.length === 0) generateAngles();
+  }
+
+  function syncProspectFromWizard(){
+    if (state.selectedProspect === null) return;
+    var p = state.prospects[state.selectedProspect];
+    if (!p) return;
+    var v = function(id){ var el = $(id); return el ? el.value.trim() : ''; };
+    p.contact = v('p-contact') || p.contact;
+    p.role = v('p-role') || p.role;
+    p.company = v('p-company') || p.company;
+    p.sector = v('p-sector') || p.sector;
+    p.size = v('p-size') || p.size;
+    p.teamSize = v('p-team-size') || p.teamSize;
+    p.problems = v('p-problems') || p.problems;
+    p.tried = v('p-tried') || p.tried;
+    p.fit = v('p-fit') || p.fit;
+    saveProspects();
+  }
+
+  function syncOurCompanyFromWizard(){
+    state.ourCompany = {
+      name: ($('our-name') || {}).value || '',
+      sector: ($('our-sector') || {}).value || '',
+      product: ($('our-product') || {}).value || '',
+      problem: ($('our-problem') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+    saveOurCompany();
+  }
+
+  function wizardNext(){
+    if (state.wizardStep === 1) syncOurCompanyFromWizard();
+    if (state.wizardStep === 2) {
+      syncProspectFromWizard();
+      state.generatedAngles = [];
+      state.generatedTriggers = [];
+    }
+    if (state.wizardStep < 4) goToWizardStep(state.wizardStep + 1);
+  }
+
+  function wizardPrev(){
+    if (state.wizardStep > 1) goToWizardStep(state.wizardStep - 1);
+  }
+
+  function bindOurCompanyAutoSave(){
+    ['our-name','our-sector','our-product','our-problem','our-results'].forEach(function(id){
+      var el = $(id);
+      if (el) el.addEventListener('input', function(){ syncOurCompanyFromWizard(); });
+    });
+  }
+
+  async function generateScript(){
+    var gKey = getGeminiKey();
+    if (!gKey) { toast('Clé Gemini manquante — clique sur 🔑 Clés API', 'error'); return; }
+    if (!state.sequenceType) { toast('Choisissez d\'abord un type de séquence', 'warning'); return; }
+
+    var btn = $('btn-generate-script');
+    btn.disabled = true;
+    btn.textContent = '✨ Génération…';
+
+    var our = {
+      name: ($('our-name') || {}).value || '',
+      sector: ($('our-sector') || {}).value || '',
+      product: ($('our-product') || {}).value || '',
+      problem: ($('our-problem') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+    var prospect = {
+      company: ($('p-company') || {}).value || '',
+      sector: ($('p-sector') || {}).value || '',
+      role: ($('p-role') || {}).value || '',
+      problems: ($('p-problems') || {}).value || '',
+      tried: ($('p-tried') || {}).value || '',
+      fit: ($('p-fit') || {}).value || ''
+    };
+    var selectedAngle = state.generatedAngles[state.selectedAngles[0]] || null;
+    var config = SEQUENCE_CONFIG[state.sequenceType];
+
+    var promptText = 'Tu es un expert en vente B2B. Génère un script détaillé pour un ' + config.label + '.\n\n' +
+      'NOTRE ENTREPRISE :\n' + JSON.stringify(our, null, 2) + '\n\n' +
+      'LE PROSPECT :\n' + JSON.stringify(prospect, null, 2) + '\n\n' +
+      (selectedAngle ? 'ANGLE CHALLENGER SÉLECTIONNÉ :\n' + JSON.stringify(selectedAngle, null, 2) + '\n\n' : '') +
+      'TYPE DE SÉQUENCE : ' + config.label + '\n' +
+      'Structure attendue :\n' +
+      config.scriptBlocks.map(function(b){ return '- ' + b.tag; }).join('\n') + '\n\n' +
+      'Style : Direct, naturel, orienté conversation. Utilise les verbatims du prospect quand ils sont disponibles. Chaque bloc doit contenir 2-4 phrases maximum. Ne mets pas de titres, juste le contenu de chaque bloc séparé par des lignes vides.\n\n' +
+      'Réponds en texte brut uniquement (pas de JSON, pas de markdown).';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
+      });
+      if (!res.ok) {
+        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
+        throw new Error('HTTP ' + res.status);
+      }
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
+      if (!textPart) throw new Error('Pas de réponse');
+
+      var gs = $('generated-script');
+      gs.value = textPart.text.trim();
+      gs.style.display = 'block';
+      state.scriptContent = gs.value;
+      toast('Script généré — modifiez-le si besoin', 'success');
+    } catch(e) {
+      console.error('generateScript', e);
+      toast('Erreur génération script : ' + e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '✨ Créer un script avec l\'IA';
+    }
+  }
+
+  async function fetchCompanyInfo(who){
+    var gKey = getGeminiKey();
+    if (!gKey) { toast('Clé Gemini manquante — clique sur 🔑 Clés API', 'error'); return; }
+    var urlInput = $(who === 'our' ? 'our-url' : 'prospect-url');
+    var url = urlInput.value.trim();
+    if (!url) { toast('Entrez une URL d\'abord', 'warning'); return; }
+
+    var loadingEl = $(who + '-loading');
+    var btn = document.querySelector('.btn-fetch[data-fetch="' + who + '"]');
+    loadingEl.classList.add('visible');
+    if (btn) { btn.disabled = true; btn.textContent = 'Analyse…'; }
+
+    var promptText = 'Tu es un assistant commercial expert. Analyse cette entreprise via son site web et les informations disponibles en ligne.\n' +
+      'URL : ' + url + '\n' +
+      'Réponds UNIQUEMENT en JSON valide, sans markdown.\n' +
+      '{\n  "name": "Nom",\n  "sector": "Secteur",\n  "product": "Produit/service",\n  "problem_solved": "Problème résolu",\n  "size": "Taille",\n  "key_results": "Résultats clés",\n  "commercial_team": "Équipe commerciale",\n  "suspected_problems": "Problèmes possibles avec la force de vente",\n  "trigger_hypotheses": "Pourquoi intéressé par du coaching commercial maintenant"\n}';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
+      });
+      if (!res.ok) {
+        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
+        throw new Error('HTTP ' + res.status);
+      }
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
+      if (!textPart) throw new Error('Pas de réponse');
+      var parsed = parseGeminiJSON(textPart.text);
+
+      if (who === 'our') {
+        if (parsed.name) setVal('our-name', parsed.name);
+        if (parsed.sector) setVal('our-sector', parsed.sector);
+        if (parsed.product) setVal('our-product', parsed.product);
+        if (parsed.problem_solved) setVal('our-problem', parsed.problem_solved);
+        if (parsed.key_results) setVal('our-results', parsed.key_results);
+        syncOurCompanyFromWizard();
+      } else {
+        if (parsed.name) setVal('p-company', parsed.name);
+        if (parsed.sector) setVal('p-sector', parsed.sector);
+        if (parsed.size) setVal('p-size', parsed.size);
+        if (parsed.commercial_team) setVal('p-team-size', parsed.commercial_team);
+        if (parsed.suspected_problems) setVal('p-problems', parsed.suspected_problems);
+        if (parsed.trigger_hypotheses) setVal('p-fit', parsed.trigger_hypotheses);
+        syncProspectFromWizard();
+      }
+      toast('Informations importées', 'success');
+    } catch(e) {
+      console.error(e);
+      toast('Erreur analyse : ' + e.message, 'error');
+    } finally {
+      loadingEl.classList.remove('visible');
+      if (btn) { btn.disabled = false; btn.textContent = 'Analyser →'; }
+    }
+  }
+
+  async function generateAngles(){
+    var card = $('angles-loading-card');
+    var container = $('angles-container');
+    card.style.display = 'block';
+    card.innerHTML = '<div class="fetch-loading visible" style="gap:10px;margin-top:0;"><div class="spin" style="width:16px;height:16px;"></div>Génération des angles stratégiques en cours…</div>';
+    container.style.display = 'none';
+
+    var gKey = getGeminiKey();
+    if (!gKey) { card.innerHTML = '<div style="color:var(--red);font-size:13px;">Clé Gemini manquante — clique sur 🔑 Clés API en haut à droite.</div>'; return; }
+
+    var our = {
+      name: ($('our-name') || {}).value || '',
+      product: ($('our-product') || {}).value || '',
+      problem: ($('our-problem') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+    var prospect = {
+      company: ($('p-company') || {}).value || '',
+      sector: ($('p-sector') || {}).value || '',
+      role: ($('p-role') || {}).value || '',
+      size: ($('p-size') || {}).value || '',
+      problems: ($('p-problems') || {}).value || '',
+      tried: ($('p-tried') || {}).value || ''
+    };
+
+    var promptText = 'Tu es un expert en vente B2B Challenger Sale. Génère EXACTEMENT 3 angles stratégiques qui utilisent 3 MÉCANISMES DE PERSUASION STRUCTURELLEMENT DIFFÉRENTS.\n\n' +
+      'MÉCANISME 1 — RATIONNEL / ROI : chiffres, coût de l\'inaction, calculateur.\n' +
+      'MÉCANISME 2 — ÉMOTIONNEL / IDENTITAIRE : ce que ce problème dit d\'eux en tant que manager.\n' +
+      'MÉCANISME 3 — COMPÉTITIF / URGENCE : ce que font les concurrents, la fenêtre qui se ferme.\n\n' +
+      'NOTRE ENTREPRISE : ' + JSON.stringify(our) + '\n' +
+      'PROSPECT : ' + JSON.stringify(prospect) + '\n\n' +
+      'Réponds UNIQUEMENT en JSON valide sans markdown :\n' +
+      '{\n  "angles": [\n    { "mechanism": "RATIONNEL", "title": "Titre 5 mots max", "description": "Pourquoi résonne (2-3 phrases)", "key_stat": "Chiffre clé", "opener": "Phrase d\'ouverture" },\n    { "mechanism": "ÉMOTIONNEL", "title": "...", "description": "...", "key_stat": "...", "opener": "..." },\n    { "mechanism": "COMPÉTITIF", "title": "...", "description": "...", "key_stat": "...", "opener": "..." }\n  ],\n  "triggers": ["Raison 1", "Raison 2", "Raison 3"]\n}';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
+      });
+      if (!res.ok) {
+        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et clique Réessayer');
+        throw new Error('HTTP ' + res.status);
+      }
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
+      if (!textPart) throw new Error('Pas de réponse');
+      var parsed = parseGeminiJSON(textPart.text);
+      state.generatedAngles = parsed.angles || [];
+      state.generatedTriggers = parsed.triggers || [];
+      state.selectedAngles = state.generatedAngles.map(function(_, i){ return i; });
+      renderAngles(state.generatedAngles);
+      renderTriggers(state.generatedTriggers);
+      card.style.display = 'none';
+      container.style.display = 'block';
+      toast('3 angles générés', 'success');
+    } catch(e) {
+      console.error('generateAngles', e);
+      card.innerHTML = '<div style="color:var(--red);font-size:13px;line-height:1.5;">Erreur : ' + esc(e.message) + '<br><button class="btn-secondary" style="margin-top:10px;" onclick="window.__lc_retryAngles()">Réessayer</button></div>';
+    }
+  }
+
+  function renderAngles(angles){
+    var grid = $('angles-grid');
+    grid.innerHTML = (angles || []).map(function(a, i){
+      return '<div class="angle-card selected" data-angle="' + i + '">' +
+        '<div class="angle-num">' + (i + 1) + '</div>' +
+        '<div class="angle-mechanism">' + esc(a.mechanism || 'ANGLE') + '</div>' +
+        '<div class="angle-title">' + esc(a.title || '') + '</div>' +
+        '<div class="angle-desc">' + esc(a.description || '') + '</div>' +
+        (a.key_stat ? '<div class="angle-key-stat">📊 ' + esc(a.key_stat) + '</div>' : '') +
+        '<div class="angle-check">✓ Sélectionné</div>' +
+      '</div>';
+    }).join('');
+    grid.querySelectorAll('.angle-card').forEach(function(card){
+      card.addEventListener('click', function(){
+        var i = parseInt(card.dataset.angle, 10);
+        var idx = state.selectedAngles.indexOf(i);
+        if (idx > -1) state.selectedAngles.splice(idx, 1);
+        else state.selectedAngles.push(i);
+        card.classList.toggle('selected');
+      });
+    });
+  }
+
+  function renderTriggers(triggers){
+    var cont = $('triggers-container');
+    if (!triggers || !triggers.length) { cont.innerHTML = '<div style="font-size:12px;color:var(--muted-2);">Aucune hypothèse générée.</div>'; return; }
+    cont.innerHTML = triggers.map(function(t){
+      return '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--stone-50);border-radius:var(--r-sm);border:1px solid var(--border);">' +
+        '<span style="color:var(--sage);font-size:13px;font-weight:700;flex-shrink:0;">→</span>' +
+        '<span style="font-size:13px;color:var(--ink-2);line-height:1.55;">' + esc(t) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  window.__lc_retryAngles = function(){ state.generatedAngles = []; generateAngles(); };
+
+  function handleScriptUpload(input){
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var zone = $('script-upload-zone');
+    zone.classList.add('has-file');
+    zone.innerHTML = '<div class="upload-icon">✓</div><div class="upload-label" style="color:var(--sage);">' + esc(file.name) + '</div><div class="upload-sub">Cliquez pour changer</div>';
+    var reader = new FileReader();
+    reader.onload = function(e){ state.scriptContent = e.target.result; };
+    reader.readAsText(file);
+    toast('Script chargé : ' + file.name, 'success');
+  }
+
+  function checkInfoSufficiency(){
+    if (!state.sequenceType) return true;
+    if (['cold_call', 'rdv_decouverte'].indexOf(state.sequenceType) > -1) return true;
+
+    var ourProduct = ($('our-product') || {}).value ? $('our-product').value.trim() : '';
+    var pProblems = ($('p-problems') || {}).value ? $('p-problems').value.trim() : '';
+    var pTried = ($('p-tried') || {}).value ? $('p-tried').value.trim() : '';
+    var pFit = ($('p-fit') || {}).value ? $('p-fit').value.trim() : '';
+
+    var missing = [];
+    if (ourProduct.length < 30) missing.push('Décrivez plus en détail ce que vous vendez (au moins 2-3 phrases).');
+    if (!pProblems && !pTried) missing.push('Renseignez les problèmes connus ou les solutions déjà tentées par le prospect.');
+    if (!pFit) missing.push('Précisez comment vos services peuvent aider ce prospect.');
+
+    if (missing.length) {
+      $('info-needed-body').innerHTML =
+        '<p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Pour un ' + SEQUENCE_CONFIG[state.sequenceType].label + ', l\'IA a besoin de plus d\'informations pour bien vous coacher.</p>' +
+        '<ul style="font-size:13px;color:var(--ink-2);line-height:1.8;padding-left:20px;">' +
+        missing.map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>';
+      openModal('modal-info-needed');
+      return false;
+    }
+    return true;
+  }
+
+  function applySequenceConfig(){
+    var config = SEQUENCE_CONFIG[state.sequenceType] || SEQUENCE_CONFIG.rdv_complet;
+    state.sequenceConfig = config;
+
+    var pp = $('phase-pills');
+    pp.innerHTML = config.phases.map(function(label, i){
+      return '<div class="phase-pill' + (i === 0 ? ' active' : '') + '" data-phase="' + (i + 1) + '">' + esc(label) + '</div>';
+    }).join('');
+    pp.querySelectorAll('.phase-pill').forEach(function(p){
+      p.addEventListener('click', function(){ setPhase(parseInt(p.dataset.phase, 10)); });
+    });
+
+    var qd = $('quality-dots');
+    qd.innerHTML = config.qualityCriteria.map(function(c){ return '<div class="qdot" title="' + esc(c) + '"></div>'; }).join('');
+
+    var ql = $('quality-label');
+    if (ql) ql.textContent = config.label;
+
+    var zone = $('info-cards-zone');
+    zone.innerHTML = config.infoCards.map(function(c){
+      return '<div class="info-card" data-info="' + c.key + '"><div class="info-card-label">' + esc(c.label) + '</div><div class="info-card-value" id="ic-' + c.key + '">En attente…</div></div>';
+    }).join('');
+
+    var sz = $('script-zone');
+    sz.innerHTML = config.scriptBlocks.map(function(b, i){
+      return '<div class="script-block' + (i === 0 ? ' current' : '') + '" data-script="' + esc(b.tag) + '">' +
+        '<div class="script-block-tag">' + esc(b.tag) + '</div>' +
+        '<div class="script-block-text">' + esc(b.text) + '</div>' +
+      '</div>';
+    }).join('');
+
+    var rct = $('right-col-title');
+    if (rct) rct.textContent = config.scriptLabel || 'Script';
+
+    var sp = $('suggestion-pills');
+    sp.innerHTML = config.defaultSuggestions.map(function(s){
+      return '<button class="suggestion-pill"><span class="pill-tag">' + esc(s.tag) + '</span>' + esc(s.text) + '</button>';
+    }).join('');
+
+    var mp = $('matching-panel');
+    if (['rdv_demo', 'rdv_complet', 'rdv_closing'].indexOf(state.sequenceType) > -1) {
+      mp.style.display = '';
+    } else {
+      mp.style.display = 'none';
+    }
+  }
+
+  function launchSession(){
+    if (!state.sequenceType) { toast('Choisissez un type de séquence avant de lancer', 'warning'); return; }
+    if (!checkInfoSufficiency()) return;
+
+    if (state.selectedProspect === null || !state.prospects[state.selectedProspect]) {
+      var contact = ($('p-contact') || {}).value ? $('p-contact').value.trim() : '';
+      var company = ($('p-company') || {}).value ? $('p-company').value.trim() : '';
+      if (!contact && !company) {
+        toast('Renseignez au moins le nom du contact ou l\'entreprise', 'warning');
+        goToWizardStep(2);
+        return;
+      }
+      var p = {
+        contact: contact, role: ($('p-role') || {}).value ? $('p-role').value.trim() : '',
+        company: company, sector: ($('p-sector') || {}).value ? $('p-sector').value.trim() : '',
+        size: ($('p-size') || {}).value ? $('p-size').value.trim() : '',
+        teamSize: ($('p-team-size') || {}).value ? $('p-team-size').value.trim() : '',
+        problems: ($('p-problems') || {}).value ? $('p-problems').value.trim() : '',
+        tried: ($('p-tried') || {}).value ? $('p-tried').value.trim() : '',
+        fit: ($('p-fit') || {}).value ? $('p-fit').value.trim() : '',
+        email: '', phone: '', notes: '',
+        rdvHistory: [], createdAt: new Date().toISOString()
+      };
+      state.prospects.push(p);
+      state.selectedProspect = state.prospects.length - 1;
+      saveProspects();
+    }
+
+    syncOurCompanyFromWizard();
+    syncProspectFromWizard();
+
+    resetSessionState();
+    applySequenceConfig();
+
+    state.sessionStartTime = Date.now();
+    renderChallengerAngles();
+
+    switchView('live');
+    setPhase(1);
+    startTimer();
+    startSilenceMonitor();
+  }
+
+  function resetSessionState(){
+    state.transcript = [];
+    state.currentBubbles = { commercial: null, prospect: null };
+    state.interimEls = { commercial: null, prospect: null };
+    state.capturedInfos = {
+      company: null, problem: null, impact: null,
+      tried: null, trigger: null, verbatim: null, budget: null,
+      criteria: null, feature: null, reaction: null, next_step: null,
+      price: null, conditions: null, objection: null, decision: null
+    };
+    state.capturedCount = 0;
+    state.qualityScore = 0;
+    state.analysisToken = 0;
+    if (state.analysisDebounce) { clearTimeout(state.analysisDebounce); state.analysisDebounce = null; }
+    state.commercialWordTimes = [];
+    state.phase = 1;
+    state.selectedChallengerAngle = 0;
+    state.pendingUnknownSegments = [];
+    if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+    stopListening();
+
+    var ti = $('transcript-inner');
+    if (ti) ti.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--muted-2);font-size:13px;">Démarrez l\'écoute pour voir la transcription apparaître ici.</div>';
+    var cc = $('capture-count');
+    if (cc) cc.textContent = '0 capturées';
+    var qp = $('quality-pct');
+    if (qp) qp.textContent = '0 / 6';
+    var df = $('debit-fill'); if (df) df.style.width = '0%';
+    var dw = $('debit-wpm'); if (dw) { dw.textContent = '— mpm'; dw.style.color = ''; }
+    var sa = $('suggestions-age'); if (sa) sa.textContent = '';
+    var lt = $('live-timer'); if (lt) lt.textContent = '00:00';
+    var rt = $('recap-text'); if (rt) rt.value = '';
+    lastRecapText = '';
+    if ($('audio-mic')) $('audio-mic').classList.add('active');
+    if ($('audio-tab')) $('audio-tab').classList.remove('active');
+
+    // Adapter l'affichage du sélecteur d'onglet selon le mode
+    if ($('audio-tab')) $('audio-tab').style.display = (state.sessionMode === 'f2f') ? 'none' : '';
+
+    var mb = $('matching-body');
+    if (mb) mb.innerHTML = '<div style="padding:16px;font-size:12px;color:var(--muted-2);text-align:center;">Les correspondances apparaîtront au fil de la conversation.</div>';
+  }
+
+  function startTimer(){
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.timerInterval = setInterval(function(){
+      if (!state.sessionStartTime) return;
+      var elapsed = Math.floor((Date.now() - state.sessionStartTime) / 1000);
+      var m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+      var s = String(elapsed % 60).padStart(2, '0');
+      var lt = $('live-timer');
+      if (lt) lt.textContent = m + ':' + s;
+    }, 1000);
+  }
+
+  function setPhase(n){
+    state.phase = n;
+    document.querySelectorAll('.phase-pill').forEach(function(p){
+      p.classList.toggle('active', parseInt(p.dataset.phase, 10) === n);
+    });
+    var tz = $('transcript-zone');
+    var rz = $('recap-zone');
+    var sz = $('suggestions-zone');
+    var scrZ = $('script-zone');
+    var cz = $('challenger-zone');
+    var rr = $('right-recap-zone');
+    var rt = $('right-col-title');
+
+    if (n === 1) {
+      tz.style.display = '';
+      rz.classList.remove('active');
+      sz.style.display = '';
+      scrZ.style.display = '';
+      cz.classList.remove('active');
+      rr.style.display = 'none';
+      rt.textContent = state.sequenceConfig ? state.sequenceConfig.scriptLabel : 'Script';
+    } else if (n === 2) {
+      tz.style.display = 'none';
+      rz.classList.add('active');
+      sz.style.display = 'none';
+      scrZ.style.display = 'none';
+      cz.classList.remove('active');
+      rr.style.display = 'flex';
+      rt.textContent = 'Récapitulatif';
+      generateRecap();
+    } else if (n === 3) {
+      tz.style.display = '';
+      rz.classList.remove('active');
+      sz.style.display = 'none';
+      scrZ.style.display = 'none';
+      cz.classList.add('active');
+      rr.style.display = 'none';
+      rt.textContent = 'Séquence Challenger';
+      generateChallengerSequence(state.selectedChallengerAngle);
+    }
+  }
+
+  // ═══ AUDIO ═══
+  async function startListening(){
+    var dKey = getDeepgramKey();
+    if (!dKey) { toast('Clé Deepgram manquante — clique sur 🔑 Clés API', 'error'); return; }
+    try {
+      var micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      state.micStream = micStream;
+      $('audio-mic').classList.add('active');
+
+      var tabStream = null;
+      // En F2F, on ne capture pas l'onglet
+      if (state.sessionMode === 'visio') {
+        try {
+          tabStream = await navigator.mediaDevices.getDisplayMedia({
+            audio: { suppressLocalAudioPlayback: false },
+            video: true
+          });
+          tabStream.getVideoTracks().forEach(function(t){ t.stop(); });
+          if (!tabStream.getAudioTracks().length) {
+            toast('Aucune piste audio dans l\'onglet partagé. Cochez "Partager l\'audio de l\'onglet".', 'warning');
+            tabStream.getTracks().forEach(function(t){ t.stop(); });
+            tabStream = null;
+          } else {
+            state.tabStream = tabStream;
+            $('audio-tab').classList.add('active');
+          }
+        } catch(e) {
+          toast('Partage d\'onglet refusé — transcription micro uniquement', 'warning');
+        }
+      }
+
+      if (state.sessionMode === 'visio') {
+        connectDeepgram(dKey, micStream, 'commercial');
+        if (tabStream) connectDeepgram(dKey, tabStream, 'prospect');
+      } else {
+        // F2F : un seul flux avec diarize
+        connectDeepgram(dKey, micStream, 'f2f');
+      }
+
+      $('btn-start-listen').style.display = 'none';
+      $('btn-stop-listen').style.display = 'flex';
+      toast('Écoute démarrée', 'success');
+    } catch(e) {
+      console.error(e);
+      toast('Erreur accès micro : ' + e.message, 'error');
+    }
+  }
+
+  function connectDeepgram(apiKey, stream, who){
+    // AJOUT : Nova-3 + diarize en F2F
+    var url = 'wss://api.deepgram.com/v1/listen?language=fr&model=nova-3&smart_format=true&interim_results=true&punctuate=true&utterance_end_ms=1500';
+    if (who === 'f2f') url += '&diarize=true';
+
+    var ws = new WebSocket(url, ['token', apiKey]);
+    var session = { ws: ws, recorder: null, stream: stream, who: who };
+    state.audioSessions.push(session);
+
+    ws.onopen = function(){
+      try {
+        var recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        recorder.ondataavailable = function(e){
+          if (e.data && e.data.size > 0 && ws.readyState === WebSocket.OPEN) ws.send(e.data);
+        };
+        recorder.start(250);
+        session.recorder = recorder;
+      } catch(e) { console.error('Recorder error', e); }
+    };
+    ws.onmessage = function(e){
+      try {
+        var msg = JSON.parse(e.data);
+        if (msg.type === 'Results') handleTranscript(msg, who);
+      } catch(_) {}
+    };
+    ws.onerror = function(){ toast('Erreur Deepgram (' + who + ')', 'error'); };
+  }
+
+  function stopListening(){
+    state.audioSessions.forEach(function(s){
+      try { if (s.recorder && s.recorder.state !== 'inactive') s.recorder.stop(); } catch(_) {}
+      try { if (s.ws && s.ws.readyState <= 1) s.ws.close(); } catch(_) {}
+      try { s.stream.getTracks().forEach(function(t){ t.stop(); }); } catch(_) {}
+    });
+    state.audioSessions = [];
+    if (state.micStream) { state.micStream.getTracks().forEach(function(t){ t.stop(); }); state.micStream = null; }
+    if (state.tabStream) { state.tabStream.getTracks().forEach(function(t){ t.stop(); }); state.tabStream = null; }
+    var bs = $('btn-start-listen');
+    var bt = $('btn-stop-listen');
+    if (bs) bs.style.display = '';
+    if (bt) bt.style.display = 'none';
+    if ($('audio-mic')) $('audio-mic').classList.remove('active');
+    if ($('audio-tab')) $('audio-tab').classList.remove('active');
+  }
+
+  function handleTranscript(msg, who){
+    var alt = msg.channel && msg.channel.alternatives && msg.channel.alternatives[0];
+    if (!alt || !alt.transcript) return;
+    var text = alt.transcript.trim();
+    if (!text) return;
+    var isFinal = msg.is_final;
+
+    // Déterminer le locuteur selon la source
+    var speaker = who;
+    if (who === 'f2f' && alt.words && alt.words.length) {
+      var spk = alt.words[0].speaker;
+      if (spk === 0) speaker = 'commercial';
+      else if (spk === 1) speaker = 'prospect';
+      else speaker = 'unknown';
+    }
+
+    if (!isFinal) {
+      if (speaker === 'commercial' || speaker === 'unknown') showInterim(text, speaker);
+      if (speaker === 'commercial') trackSpeechRate(alt.words || []);
+    } else {
+      clearInterim(speaker);
+      addTurnAccumulated(text, speaker);
+      scheduleAnalysis();
+      if (speaker === 'unknown') {
+        state.pendingUnknownSegments.push({ index: state.transcript.length - 1, text: text });
+        scheduleLLMRoleDisambiguation();
+      }
+      if (speaker === 'commercial') {
+        var sa = $('silence-alert');
+        if (sa) sa.classList.remove('visible');
+      }
+    }
+  }
+
+  function showInterim(text, who){
+    var zone = $('transcript-inner');
+    if (!zone) return;
+    if (zone.children.length === 1 && zone.children[0].textContent.indexOf('Démarrez l\'écoute') > -1) zone.innerHTML = '';
+    var el = state.interimEls[who];
+    if (!el || !document.body.contains(el)) {
+      el = document.createElement('div');
+      el.className = 'turn ' + (who === 'unknown' ? 'unknown' : who);
+      el.style.opacity = '.5';
+      var lbl = who === 'commercial' ? 'MOI' : who === 'prospect' ? 'LUI' : '?';
+      el.innerHTML = '<div class="turn-who ' + (who === 'unknown' ? 'unknown' : who) + '">' + lbl + '</div><div class="turn-bubble" style="border-style:dashed;"></div>';
+      zone.appendChild(el);
+      state.interimEls[who] = el;
+    }
+    var bubble = el.querySelector('.turn-bubble');
+    if (bubble) bubble.textContent = text;
+    scrollTranscript();
+  }
+
+  function clearInterim(who){
+    var el = state.interimEls[who];
+    if (el && document.body.contains(el)) el.remove();
+    state.interimEls[who] = null;
+  }
+
+  function addTurnAccumulated(text, who){
+    var zone = $('transcript-inner');
+    if (!zone) return;
+    var lastTurn = state.transcript[state.transcript.length - 1];
+    var now = nowTime();
+
+    if (lastTurn && lastTurn.who === who && state.currentBubbles[who]) {
+      var bubble = state.currentBubbles[who];
+      if (bubble.el && document.body.contains(bubble.el)) {
+        bubble.text = bubble.text + ' ' + text;
+        var bubbleEl = bubble.el.querySelector('.turn-bubble');
+        if (bubbleEl) bubbleEl.textContent = bubble.text;
+        lastTurn.text = bubble.text;
+        lastTurn.ts = now;
+        scrollTranscript();
+        return;
+      }
+    }
+
+    var other = who === 'commercial' ? 'prospect' : 'commercial';
+    state.currentBubbles[other] = null;
+
+    var cls = who === 'commercial' ? 'commercial' : who === 'prospect' ? 'prospect' : 'unknown';
+    var lbl = who === 'commercial' ? 'MOI' : who === 'prospect' ? 'LUI' : '?';
+    var el = document.createElement('div');
+    el.className = 'turn ' + cls;
+    el.innerHTML = '<div class="turn-who ' + cls + '">' + lbl + '</div>' +
+      '<div><div class="turn-bubble">' + esc(text) + '</div><div class="turn-time">' + now + '</div></div>';
+    zone.appendChild(el);
+    state.currentBubbles[who] = { el: el, text: text, startedAt: Date.now() };
+    state.transcript.push({ text: text, who: who, ts: now });
+    scrollTranscript();
+  }
+
+  function scrollTranscript(){
+    var zone = $('transcript-zone');
+    if (zone) zone.scrollTop = zone.scrollHeight;
+  }
+
+  function trackSpeechRate(words){
+    if (!words || !words.length) return;
+    var now = Date.now() / 1000;
+    words.forEach(function(w){ state.commercialWordTimes.push(now - (w.duration || 0.2)); });
+    state.commercialWordTimes = state.commercialWordTimes.filter(function(t){ return now - t < 30; });
+    var wpm = Math.round((state.commercialWordTimes.length / 30) * 60);
+    var fill = $('debit-fill');
+    var wpmEl = $('debit-wpm');
+    if (!fill || !wpmEl) return;
+    wpmEl.textContent = wpm + ' mpm';
+    fill.style.width = Math.min(100, (wpm / 200) * 100) + '%';
+    if (wpm < 120) { fill.style.background = 'var(--sage)'; wpmEl.style.color = 'var(--sage)'; }
+    else if (wpm < 160) { fill.style.background = 'var(--amber)'; wpmEl.style.color = 'var(--amber)'; }
+    else { fill.style.background = 'var(--red)'; wpmEl.style.color = 'var(--red)'; }
+  }
+
+  function startSilenceMonitor(){
+    if (state.silenceInterval) clearInterval(state.silenceInterval);
+    state.silenceInterval = setInterval(function(){
+      if (!state.sessionStartTime) return;
+      var recent = state.transcript.slice(-4);
+      if (recent.length < 3) return;
+      var cc = recent.filter(function(t){ return t.who === 'commercial'; }).length;
+      if (cc >= 3) {
+        var el = $('silence-alert');
+        if (el) { el.classList.add('visible'); setTimeout(function(){ el.classList.remove('visible'); }, 5000); }
+      }
+    }, 15000);
+  }
+
+  function stopSilenceMonitor(){
+    if (state.silenceInterval) { clearInterval(state.silenceInterval); state.silenceInterval = null; }
+    var sa = $('silence-alert');
+    if (sa) sa.classList.remove('visible');
+  }
+
+  // ═══ DÉSAMBUGUÏSATION LLM (F2F) ═══
+  function scheduleLLMRoleDisambiguation(){
+    if (state.llmRoleDebounce) clearTimeout(state.llmRoleDebounce);
+    state.llmRoleDebounce = setTimeout(async function(){
+      if (!state.pendingUnknownSegments.length) return;
+      var gKey = getGeminiKey();
+      if (!gKey) return;
+
+      var history = state.transcript.slice(-10);
+      var prompt = 'Tu es un analyseur de conversation commerciale. Voici les derniers tours. Certains ont un locuteur "UNKNOWN". Détermine pour chacun si c\'est le COMMERCIAL ou le PROSPECT qui parle, en te basant sur le CONTEXTE.\n\n' +
+        'Règles :\n' +
+        '- Le commercial propose, questionne, reformule, argumente, répond aux objections.\n' +
+        '- Le prospect donne des infos, exprime des besoins, objections, doutes.\n\n' +
+        'CONVERSATION :\n' + history.map(function(t, i){
+          var who = t.who === 'commercial' ? 'Commercial' : t.who === 'prospect' ? 'Prospect' : 'UNKNOWN';
+          return (i+1) + '. [' + who + '] ' + t.text;
+        }).join('\n') + '\n\n' +
+        'Réponds en JSON strict :\n' +
+        '{ "assignments": [ { "index": <numéro du tour>, "speaker": "commercial"|"prospect" } ] }\n\n' +
+        'Uniquement les tours UNKNOWN.';
+
+      try {
+        var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: 300, responseMimeType: 'application/json' } })
+        });
+        if (!res.ok) return;
+        var data = await res.json();
+        var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+          ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
+        if (!textPart) return;
+
+        var parsed = null;
+        try {
+          var cleaned = String(textPart.text).trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+          parsed = JSON.parse(cleaned);
+        } catch(e) { return; }
+        if (!parsed.assignments) return;
+
+        var historyStart = state.transcript.length - history.length;
+        parsed.assignments.forEach(function(a){
+          var histIdx = a.index - 1;
+          var realIdx = historyStart + histIdx;
+          if (state.transcript[realIdx] && state.transcript[realIdx].who === 'unknown') {
+            state.transcript[realIdx].who = a.speaker;
+            updateTranscriptLine(realIdx, a.speaker);
+          }
+        });
+        state.pendingUnknownSegments = state.pendingUnknownSegments.filter(function(s){
+          return state.transcript[s.index] && state.transcript[s.index].who === 'unknown';
+        });
+      } catch(e) { console.warn('LLM role disambiguation failed', e); }
+    }, 2500);
+  }
+
+  function updateTranscriptLine(index, newSpeaker){
+    var zone = $('transcript-inner');
+    if (!zone) return;
+    var turns = zone.querySelectorAll('.turn');
+    if (!turns[index]) return;
+    var cls = newSpeaker === 'commercial' ? 'commercial' : 'prospect';
+    var lbl = newSpeaker === 'commercial' ? 'MOI' : 'LUI';
+    var whoEl = turns[index].querySelector('.turn-who');
+    if (whoEl) { whoEl.className = 'turn-who ' + cls; whoEl.textContent = lbl; }
+    turns[index].className = 'turn ' + cls;
+  }
+
+  // ═══ MODE OREILLETTE (TTS) ═══
+  var ttsVoice = null;
+  function pickTTSVoice(){
+    if (!('speechSynthesis' in window)) return null;
+    var voices = window.speechSynthesis.getVoices();
+    var fr = voices.find(function(v){ return v.lang && v.lang.toLowerCase().indexOf('fr') === 0; });
+    return fr || voices[0] || null;
+  }
+  function speakEarSuggestion(text){
+    if (!state.audioMode || !text) return;
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'fr-FR';
+      utter.rate = 1.0;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
+      if (!ttsVoice) ttsVoice = pickTTSVoice();
+      if (ttsVoice) utter.voice = ttsVoice;
+      window.speechSynthesis.speak(utter);
+    } catch(e) { console.warn('TTS error', e); }
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = function(){ ttsVoice = pickTTSVoice(); };
+  }
+  function toggleAudioMode(){
+    state.audioMode = !state.audioMode;
+    var btn = $('btn-audio-mode');
+    if (state.audioMode) {
+      btn.classList.add('on');
+      btn.innerHTML = '<div class="audio-dot"></div>🎧 Oreillette ON';
+      toast('Mode oreillette activé', 'success');
+      setTimeout(function(){ speakEarSuggestion('Mode oreillette activé.'); }, 250);
+    } else {
+      btn.classList.remove('on');
+      btn.innerHTML = '<div class="audio-dot"></div>🎧 Oreillette';
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      toast('Mode oreillette désactivé', 'warning');
+    }
+  }
+
+  // ═══ ANALYSE ═══
+  function scheduleAnalysis(){
+    if (state.analysisDebounce) clearTimeout(state.analysisDebounce);
+    state.analysisDebounce = setTimeout(function(){
+      var recent = state.transcript.slice(-8);
+      if (recent.length) analyzeConversation(recent);
+    }, 1500);
+  }
+
+  async function analyzeConversation(recentTurns){
+    var gKey = getGeminiKey();
+    if (!gKey) return;
+    var myToken = ++state.analysisToken;
+
+    var currentInfos = JSON.parse(JSON.stringify(state.capturedInfos));
+    var transcript = recentTurns.map(function(t){
+      var who = t.who === 'commercial' ? 'COMMERCIAL' : t.who === 'prospect' ? 'PROSPECT' : 'UNKNOWN';
+      return who + ': ' + t.text;
+    }).join('\n');
+
+    var prospectCtx = {
+      company: ($('p-company') || {}).value || '',
+      problems: ($('p-problems') || {}).value || '',
+      tried: ($('p-tried') || {}).value || '',
+      sector: ($('p-sector') || {}).value || ''
+    };
+    var ourCtx = {
+      product: ($('our-product') || {}).value || '',
+      problem: ($('our-problem') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+    var config = state.sequenceConfig || SEQUENCE_CONFIG.rdv_complet;
+
+    var promptText = 'Tu es un coach commercial expert. Analyse cet extrait de conversation et réponds UNIQUEMENT en JSON valide sans markdown.\n\n' +
+      'TYPE DE SÉQUENCE : ' + config.label + '\n' +
+      'NOTRE OFFRE : ' + JSON.stringify(ourCtx) + '\n' +
+      'CONTEXTE PROSPECT : ' + JSON.stringify(prospectCtx) + '\n' +
+      'INFOS DÉJÀ CAPTÉES : ' + JSON.stringify(currentInfos) + '\n\n' +
+      'EXTRAIT :\n' + transcript + '\n\n' +
+      'Réponds avec :\n' +
+      '{\n' +
+      '  "new_infos": {\n' +
+      '    "company": "info entreprise si nouvelle",\n' +
+      '    "problem": "problème identifié si nouveau",\n' +
+      '    "impact": "impact chiffré si mentionné",\n' +
+      '    "tried": "solutions passées si mentionnées",\n' +
+      '    "trigger": "déclencheur urgence si mentionné",\n' +
+      '    "verbatim": "verbatim clé du prospect si notable",\n' +
+      '    "budget": "budget ou autorité si mentionné",\n' +
+      '    "criteria": "critères de choix si mentionnés",\n' +
+      '    "feature": "feature clé montrée si mentionnée",\n' +
+      '    "reaction": "réaction du prospect si notable",\n' +
+      '    "next_step": "prochaine étape si mentionnée",\n' +
+      '    "price": "prix si mentionné",\n' +
+      '    "conditions": "conditions si mentionnées",\n' +
+      '    "objection": "objection si détectée",\n' +
+      '    "decision": "décision si prise"\n' +
+      '  },\n' +
+      '  "suggestions": [\n' +
+      '    { "tag": "TYPE DE RELANCE EN MAJUSCULES", "text": "Phrase exacte à dire par le commercial" }\n' +
+      '  ],\n' +
+      '  "ear_suggestion": {\n' +
+      '    "tag": "TYPE",\n' +
+      '    "text": "LA PHRASE EXACTE à dire au prospect, mot pour mot, telle qu\'un top sales la soufflerait à l\'oreille. Max 20 mots. Naturel. Si rien d\'utile : \'text\' vide."\n' +
+      '  },\n' +
+      '  "quality_score": 0,\n' +
+      '  "current_script_step": "' + config.scriptBlocks[0].tag + '|...",\n' +
+      '  "is_off_script": false,\n' +
+      '  "off_script_note": ""\n' +
+      '}\n' +
+      'Pour quality_score : compte combien des critères suivants sont couverts : ' + config.qualityCriteria.join(', ') + '. Score 0 à 6.\n' +
+      'Pour suggestions : max 3, ultra pertinentes par rapport à ce qui vient d\'être dit.\n' +
+      'Pour ear_suggestion : la phrase la plus utile À DIRE MAINTENANT au prospect. Si rien d\'utile, mets "text": "".\n' +
+      'Pour current_script_step : indique quel bloc du script est en cours (le plus avancé atteint).\n' +
+      'Pour is_off_script : true si le prospect part dans un territoire inattendu.\n' +
+      config.analysisExtra + '\n' +
+      'Ne mets null que si l\'info n\'est vraiment pas présente dans cet extrait.';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+      });
+      if (!res.ok) {
+        if (res.status === 429) console.warn('[Analyse] Gemini 429 — quota temporaire atteint');
+        return;
+      }
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
+      if (!textPart) return;
+
+      var parsed = parseGeminiJSON(textPart.text);
+      if (myToken !== state.analysisToken) return;
+
+      var count = state.capturedCount;
+      Object.entries(parsed.new_infos || {}).forEach(function(entry){
+        var key = entry[0], val = entry[1];
+        if (val && !state.capturedInfos[key]) {
+          state.capturedInfos[key] = val;
+          count++;
+          updateInfoCard(key, val);
+        }
+      });
+      state.capturedCount = count;
+      var cc = $('capture-count');
+      if (cc) cc.textContent = count + ' capturées';
+
+      if (typeof parsed.quality_score === 'number') {
+        state.qualityScore = Math.min(6, Math.max(0, parsed.quality_score));
+        updateQualityScore(state.qualityScore);
+      }
+
+      if (Array.isArray(parsed.suggestions) && parsed.suggestions.length) {
+        updateSuggestions(parsed.suggestions);
+        var age = $('suggestions-age');
+        if (age) {
+          age.textContent = 'il y a 0s';
+          var s = 0;
+          clearInterval(age._iv);
+          age._iv = setInterval(function(){
+            s++;
+            age.textContent = 'il y a ' + s + 's';
+            if (s > 30) clearInterval(age._iv);
+          }, 1000);
+        }
+      }
+
+      // ═══ OREILLETTE ═══
+      if (parsed.ear_suggestion && parsed.ear_suggestion.text) {
+        var earMsg = parsed.ear_suggestion.text;
+        if (state.audioMode) speakEarSuggestion(earMsg);
+        // Ajouter la suggestion oreillette en haut du panneau
+        var sp = $('suggestion-pills');
+        if (sp) {
+          var earEl = document.createElement('button');
+          earEl.className = 'suggestion-pill ear';
+          earEl.innerHTML = '<span class="pill-tag">🎧 ' + esc(parsed.ear_suggestion.tag || 'OREILLETTE') + '</span>' + esc(earMsg);
+          sp.insertBefore(earEl, sp.firstChild);
+          while (sp.children.length > 5) sp.removeChild(sp.lastChild);
+        }
+      }
+
+      if (parsed.current_script_step) advanceScript(parsed.current_script_step);
+
+      if (parsed.is_off_script) {
+        var nt = $('new-territory-alert');
+        if (nt) {
+          nt.textContent = '⚡ ' + (parsed.off_script_note || 'Territoire inattendu — adaptation en cours');
+          nt.classList.add('visible');
+          setTimeout(function(){ nt.classList.remove('visible'); }, 8000);
+        }
+      }
+
+      if (['rdv_demo', 'rdv_complet', 'rdv_closing'].indexOf(state.sequenceType) > -1) buildMatchingPanel();
+      updateSynthesisBlock();
+    } catch(e) {
+      console.warn('analyzeConversation', e);
+    }
+  }
+
+  function updateInfoCard(key, val){
+    var el = $('ic-' + key);
+    if (!el) return;
+    el.textContent = val;
+    el.classList.add('filled');
+    var card = el.closest('.info-card');
+    if (card) {
+      card.classList.add('flash');
+      setTimeout(function(){ card.classList.remove('flash'); }, 1200);
+    }
+  }
+
+  function updateQualityScore(score){
+    document.querySelectorAll('.qdot').forEach(function(d, i){ d.classList.toggle('filled', i < score); });
+    var qp = $('quality-pct');
+    if (qp) qp.textContent = score + ' / 6';
+  }
+
+  function updateSuggestions(suggestions){
+    var zone = $('suggestion-pills');
+    if (!zone) return;
+    zone.innerHTML = suggestions.map(function(s){
+      return '<button class="suggestion-pill"><span class="pill-tag">' + esc(s.tag || 'SUGGESTION') + '</span>' + esc(s.text || '') + '</button>';
+    }).join('');
+  }
+
+  function advanceScript(step){
+    var blocks = document.querySelectorAll('.script-block');
+    var tags = Array.prototype.map.call(blocks, function(b){ return b.dataset.script; });
+    var targetIdx = tags.indexOf(String(step).toUpperCase());
+    if (targetIdx === -1) return;
+    blocks.forEach(function(b, i){ b.classList.toggle('current', i === targetIdx); });
+    updateSynthesisBlock();
+  }
+
+  function updateSynthesisBlock(){
+    if (!state.sequenceConfig) return;
+    var synthBlocks = document.querySelectorAll('.script-block[data-script="SYNTHESE"], .script-block[data-script="MINI-SUMMARY"], .script-block[data-script="NEXT STEP"]');
+    if (!synthBlocks.length) return;
+    var infos = state.capturedInfos;
+    var template = state.sequenceConfig.synthesisTemplate;
+    if (typeof template !== 'function') return;
+    var newText = template(infos);
+    synthBlocks.forEach(function(block){
+      var textEl = block.querySelector('.script-block-text');
+      if (textEl) textEl.textContent = newText;
+    });
+  }
+
+  var matchingDebounce = null;
+  function buildMatchingPanel(){
+    if (matchingDebounce) clearTimeout(matchingDebounce);
+    matchingDebounce = setTimeout(function(){ _buildMatchingPanel(); }, 2000);
+  }
+
+  async function _buildMatchingPanel(){
+    var gKey = getGeminiKey();
+    if (!gKey) return;
+    var body = $('matching-body');
+    if (!body) return;
+
+    var infos = state.capturedInfos;
+    var p = state.selectedProspect !== null ? state.prospects[state.selectedProspect] : null;
+
+    var points = [];
+    if (infos.problem) points.push({ type: 'Problème', text: infos.problem });
+    if (p && p.problems && !points.find(function(x){ return x.text === p.problems; })) points.push({ type: 'Problème', text: p.problems });
+    if (infos.tried) points.push({ type: 'Solution tentée', text: infos.tried });
+    if (p && p.tried && !points.find(function(x){ return x.text === p.tried; })) points.push({ type: 'Solution tentée', text: p.tried });
+    if (infos.criteria) points.push({ type: 'Critère', text: infos.criteria });
+    if (!points.length) return;
+
+    var our = {
+      product: ($('our-product') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+
+    var prompt = 'Tu es un expert en vente B2B. Pour chaque point du prospect, trouve comment notre solution y répond concrètement. Sois spécifique et utilise les mots du prospect.\n\n' +
+      'NOTRE SOLUTION : ' + our.product + '\n' +
+      'RÉSULTATS : ' + our.results + '\n\n' +
+      'POINTS DU PROSPECT :\n' + points.map(function(pt, i){ return (i+1) + '. [' + pt.type + '] ' + pt.text; }).join('\n') + '\n\n' +
+      'Réponds en JSON :\n' +
+      '{\n  "matching": [\n    { "point": "le point exact", "type": "Problème|Solution tentée|Critère", "benefit": "Comment notre solution répond concrètement (1-2 phrases)" }\n  ]\n}';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      if (!res.ok) return;
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
+      if (!textPart) return;
+      var parsed = parseGeminiJSON(textPart.text);
+      body.innerHTML = (parsed.matching || []).map(function(m){
+        return '<div class="matching-item">' +
+          '<div class="matching-point"><span class="matching-type">' + esc(m.type) + '</span><div class="matching-text">' + esc(m.point) + '</div></div>' +
+          '<div class="matching-arrow">→</div>' +
+          '<div class="matching-benefit"><div class="matching-benefit-text">' + esc(m.benefit) + '</div></div>' +
+        '</div>';
+      }).join('');
+    } catch(e) {
+      console.warn('matching', e);
+    }
+  }
+
+  async function generateRecap(){
+    var gKey = getGeminiKey();
+    var recapEl = $('recap-text');
+    if (!recapEl) return;
+
+    var prospectVerbatims = state.transcript
+      .filter(function(t){ return t.who === 'prospect'; })
+      .map(function(t){ return '"' + t.text + '"'; })
+      .join('\n');
+
+    var infos = state.capturedInfos;
+
+    if (!gKey || !prospectVerbatims) {
+      var manual = Object.entries(infos).filter(function(e){ return e[1]; }).map(function(e){ return '• ' + e[1]; }).join('\n');
+      lastRecapText = manual || 'Aucune information captée pour l\'instant.';
+      recapEl.value = lastRecapText;
+      return;
+    }
+
+    recapEl.value = 'Génération du récapitulatif…';
+
+    var promptText = 'Tu es un coach commercial. Génère un récapitulatif de découverte basé sur les verbatims exacts du prospect.\n\n' +
+      'VERBATIMS PROSPECT :\n' + prospectVerbatims + '\n\n' +
+      'INFOS CAPTÉES :\n' + JSON.stringify(infos) + '\n\n' +
+      'Génère un récapitulatif à lire par le commercial au prospect pour validation.\n' +
+      'Style : "Si je comprends bien votre situation… [résumé avec verbatims exacts entre guillemets]… C\'est bien ça ?"\n' +
+      'Utilise les MOTS EXACTS du prospect. Sois concis (150 mots max). Réponds en texte brut uniquement, sans markdown.';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+      });
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
+      if (textPart) {
+        lastRecapText = textPart.text;
+        recapEl.value = lastRecapText;
+      }
+    } catch(e) {
+      lastRecapText = 'Erreur de génération. Rédigez le récapitulatif manuellement.';
+      recapEl.value = lastRecapText;
+    }
+  }
+
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.id === 'recap-text') lastRecapText = e.target.value;
+  });
+
+  function renderChallengerAngles(){
+    var cont = $('challenger-angles');
+    if (!cont) return;
+    var angles = state.generatedAngles.length > 0 ? state.generatedAngles : [
+      { mechanism: 'RATIONNEL', title: 'ROI immédiat' },
+      { mechanism: 'ÉMOTIONNEL', title: 'Enjeu identitaire' },
+      { mechanism: 'COMPÉTITIF', title: 'Avantage concurrentiel' }
+    ];
+    cont.innerHTML = angles.map(function(a, i){
+      return '<div class="challenger-angle-mini ' + (i === 0 ? 'selected' : '') + '" data-angle="' + i + '">' +
+        '<div class="cam-label">' + esc(a.mechanism || 'ANGLE ' + (i + 1)) + '</div>' +
+        '<div class="cam-title">' + esc(a.title || '') + '</div>' +
+      '</div>';
+    }).join('');
+    cont.querySelectorAll('.challenger-angle-mini').forEach(function(el){
+      el.addEventListener('click', function(){
+        cont.querySelectorAll('.challenger-angle-mini').forEach(function(x){ x.classList.remove('selected'); });
+        el.classList.add('selected');
+        var i = parseInt(el.dataset.angle, 10);
+        state.selectedChallengerAngle = i;
+        generateChallengerSequence(i);
+      });
+    });
+    state.selectedChallengerAngle = 0;
+  }
+
+  async function generateChallengerSequence(angleIdx){
+    var seq = $('challenger-sequence');
+    if (!seq) return;
+    seq.innerHTML = '<div style="padding:20px;color:var(--muted-2);font-size:13px;text-align:center;">Génération de la séquence Challenger…</div>';
+
+    var gKey = getGeminiKey();
+    var angle = state.generatedAngles[angleIdx];
+    var rawVerbatims = state.transcript
+      .filter(function(t){ return t.who === 'prospect'; })
+      .map(function(t){ return '- "' + t.text + '"'; })
+      .join('\n');
+    var our = {
+      product: ($('our-product') || {}).value || '',
+      results: ($('our-results') || {}).value || ''
+    };
+
+    if (!gKey) { renderChallengerDefault(seq); return; }
+
+    var promptText = 'Tu es expert en méthode Challenger Sale. Génère une séquence complète en 5 blocs.\n\n' +
+      'ANGLE CHOISI : ' + (angle ? angle.mechanism + ' — ' + angle.title : '') + '\n' +
+      'DESCRIPTION ANGLE : ' + (angle ? angle.description : '') + '\n' +
+      'STAT CLÉ : ' + (angle ? angle.key_stat : '') + '\n\n' +
+      'VERBATIMS EXACTS DU PROSPECT (à réutiliser tels quels) :\n' + (rawVerbatims || '(aucun)') + '\n\n' +
+      'NOTRE OFFRE : ' + our.product + '\n' +
+      'RÉSULTATS CLIENTS : ' + our.results + '\n\n' +
+      'Réponds UNIQUEMENT en JSON valide :\n' +
+      '{\n  "sequence": [\n    { "step": 1, "name": "WARMER", "preview": "1 ligne", "script": "Script complet" },\n    { "step": 2, "name": "REFRAME", "preview": "...", "script": "..." },\n    { "step": 3, "name": "RATIONAL DROWNING", "preview": "...", "script": "..." },\n    { "step": 4, "name": "EMOTIONAL IMPACT", "preview": "...", "script": "..." },\n    { "step": 5, "name": "A NEW WAY", "preview": "...", "script": "..." }\n  ]\n}\n' +
+      'Utilise les VERBATIMS EXACTS du prospect entre guillemets. Scripts en français.';
+
+    try {
+      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+      });
+      var data = await res.json();
+      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
+        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
+      if (!textPart) { renderChallengerDefault(seq); return; }
+      var parsed = parseGeminiJSON(textPart.text);
+      renderChallengerSteps(seq, parsed.sequence);
+    } catch(e) {
+      console.error('challenger', e);
+      renderChallengerDefault(seq);
+    }
+  }
+
+  function renderChallengerSteps(container, steps){
+    if (!steps || !steps.length) { renderChallengerDefault(container); return; }
+    container.innerHTML = steps.map(function(s, i){
+      return '<div class="challenger-step ' + (i === 0 ? 'expanded' : '') + '">' +
+        '<div class="cstep-header">' +
+          '<div class="cstep-num">' + s.step + '</div>' +
+          '<div style="flex:1;min-width:0;"><div class="cstep-title">' + esc(s.name || '') + '</div><div class="cstep-preview">' + esc(s.preview || '') + '</div></div>' +
+        '</div>' +
+        '<div class="cstep-script">' + esc(s.script || '') + '</div>' +
+      '</div>';
+    }).join('');
+    container.querySelectorAll('.challenger-step').forEach(function(el){
+      el.addEventListener('click', function(){ el.classList.toggle('expanded'); });
+    });
+  }
+
+  function renderChallengerDefault(container){
+    var steps = [
+      { step:1, name:'WARMER', preview:'Créer la connexion', script:'« J\'ai préparé ce RDV en regardant ce que vivent les équipes commerciales dans votre secteur. Les managers savent quoi faire — mais n\'ont pas les outils pour le voir à temps. »' },
+      { step:2, name:'REFRAME', preview:'Changer leur façon de voir', script:'« La plupart de mes clients pensaient que leur problème c\'était le recrutement. En fait, c\'était la rétention des bons. La rétention passe par le feedback en temps réel, pas par les revues mensuelles. »' },
+      { step:3, name:'RATIONAL DROWNING', preview:'Les noyer de données', script:'« Les études Ebsta montrent que 58% du pipeline ne se conclut jamais parce que la découverte est incomplète. Ce n\'est pas un problème de closing — c\'est un problème de qualification. »' },
+      { step:4, name:'EMOTIONAL IMPACT', preview:'Toucher l\'humain', script:'« Concrètement pour vous — combien de RDV bien préparés par mois, transformés en rien parce qu\'on n\'a pas su creuser ? »' },
+      { step:5, name:'A NEW WAY', preview:'Présenter une vision', script:'« Ce qu\'on propose c\'est pas un outil de plus. C\'est un coach dans l\'oreille qui voit ce que vous ne pouvez pas voir en parlant — et vous dit quoi creuser, en temps réel. »' }
+    ];
+    renderChallengerSteps(container, steps);
+  }
+
+  function endSession(){
+    if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+    stopSilenceMonitor();
+    stopListening();
+    if (state.audioMode && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    if (state.selectedProspect !== null && state.prospects[state.selectedProspect]) {
+      var p = state.prospects[state.selectedProspect];
+      if (!p.rdvHistory) p.rdvHistory = [];
+      var infos = state.capturedInfos;
+      if (infos.company) p.company = p.company || infos.company;
+      if (infos.problem) p.problems = infos.problem;
+      if (infos.impact) p.impact = infos.impact;
+      if (infos.tried) p.tried = infos.tried;
+      if (infos.trigger) p.trigger = infos.trigger;
+      if (infos.verbatim) p.verbatim = infos.verbatim;
+      if (infos.budget) p.budget = infos.budget;
+      var recap = lastRecapText || (($('recap-text') || {}).value || '');
+      p.rdvHistory.push({
+        date: new Date().toLocaleString('fr-FR'),
+        phase: state.phase,
+        sequenceType: state.sequenceType,
+        sequenceLabel: state.sequenceConfig ? state.sequenceConfig.label : 'Session',
+        summary: recap.slice(0, 140) || 'Session enregistrée',
+        infos: JSON.parse(JSON.stringify(infos))
+      });
+      saveProspects();
+      renderProspectsList();
+      if (document.querySelector('.prospect-row.selected')) selectProspect(state.selectedProspect);
+    }
+
+    renderDebrief();
+    switchView('debrief');
+    state.sessionStartTime = null;
+  }
+
+  function renderDebrief(){
+    var infos = state.capturedInfos;
+    var turns = state.transcript.length;
+    var prospectTurns = state.transcript.filter(function(t){ return t.who === 'prospect'; }).length;
+    var p = state.selectedProspect !== null ? state.prospects[state.selectedProspect] : null;
+    var config = state.sequenceConfig || SEQUENCE_CONFIG.rdv_complet;
+
+    var fg = function(title, rows){
+      var items = rows.filter(function(r){ return r[1]; }).map(function(r){
+        return '<div class="field-row"><div class="field-label">' + esc(r[0]) + '</div><div class="field-value">' + esc(r[1]) + '</div></div>';
+      }).join('');
+      if (!items) return '';
+      return '<div class="field-group span2"><div class="field-group-title">' + esc(title) + '</div>' + items + '</div>';
+    };
+
+    var labels = { company:'Entreprise', problem:'Problème', impact:'Impact chiffré', tried:'Solutions tentées', trigger:'Déclencheur', verbatim:'Verbatim', budget:'Budget / Autorité', criteria:'Critères de choix', feature:'Feature montrée', reaction:'Réaction prospect', next_step:'Prochaine étape', price:'Prix', conditions:'Conditions', objection:'Objection', decision:'Décision' };
+
+    var infoRows = Object.entries(infos).filter(function(e){ return e[1]; }).map(function(e){ return [labels[e[0]] || e[0], e[1]]; });
+
+    var transcriptHtml = state.transcript.length
+      ? state.transcript.map(function(t){
+          var cls = t.who === 'commercial' ? 'sage' : t.who === 'prospect' ? 'blue' : 'muted-2';
+          var lbl = t.who === 'commercial' ? 'MOI' : t.who === 'prospect' ? 'PROSPECT' : '?';
+          return '<div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.55;">' +
+            '<span style="font-family:\'DM Sans\',sans-serif;font-weight:700;color:var(--' + cls + ');">' + lbl + '</span>' +
+            '<span style="color:var(--muted-2);font-size:11px;margin-left:8px;">' + esc(t.ts) + '</span>' +
+            '<div style="margin-top:3px;color:var(--ink-2);">' + esc(t.text) + '</div>' +
+          '</div>';
+        }).join('')
+      : '<div style="color:var(--muted-2);font-size:13px;">Aucune transcription</div>';
+
+    $('debrief-body').innerHTML =
+      '<div class="field-group span2">' +
+        '<div class="field-group-title">Résumé de session' + (p ? ' — ' + esc(p.contact || p.company || '') : '') + '</div>' +
+        '<div class="field-row"><div class="field-label">Type</div><div class="field-value">' + esc(config.label) + '</div></div>' +
+        '<div class="field-row"><div class="field-label">Mode</div><div class="field-value">' + (state.sessionMode === 'f2f' ? 'Face-à-face' : 'Visio/Téléphonie') + '</div></div>' +
+        '<div class="field-row"><div class="field-label">Échanges</div><div class="field-value">' + turns + ' prises de parole (' + prospectTurns + ' prospect, ' + (turns - prospectTurns) + ' commercial)</div></div>' +
+        '<div class="field-row"><div class="field-label">Score découverte</div><div class="field-value">' + state.qualityScore + ' / 6 critères couverts</div></div>' +
+      '</div>' +
+      (infoRows.length ? fg('Informations captées', infoRows) : '<div class="field-group span2"><div class="field-group-title">Informations captées</div><div style="color:var(--muted-2);font-size:13px;">Aucune information capturée</div></div>') +
+      '<div class="field-group span2">' +
+        '<div class="field-group-title">Récapitulatif validé</div>' +
+        '<div style="padding:12px 14px;background:var(--sage-light);border:1px solid var(--sage-border);border-radius:var(--r-sm);font-size:13px;color:var(--ink-2);line-height:1.6;white-space:pre-wrap;">' + esc(lastRecapText || '—') + '</div>' +
+      '</div>' +
+      '<div class="field-group span2">' +
+        '<div class="field-group-title">Transcription complète</div>' +
+        '<div style="max-height:380px;overflow-y:auto;" class="scrollable">' + transcriptHtml + '</div>' +
+      '</div>';
+  }
+
+  function exportSession(){
+    var data = {
+      date: new Date().toISOString(),
+      mode: state.sessionMode,
+      sequenceType: state.sequenceType,
+      prospect: state.selectedProspect !== null ? state.prospects[state.selectedProspect] : null,
+      capturedInfos: state.capturedInfos,
+      qualityScore: state.qualityScore,
+      transcript: state.transcript,
+      recap: lastRecapText
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'session_' + new Date().toLocaleDateString('fr-FR').replace(/\//g, '-') + '.json';
+    a.click();
+    toast('Session exportée', 'success');
+  }
+
+  function bindEvents(){
+    document.querySelectorAll('.nav-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        var v = b.dataset.view;
+        if (v === 'setup') initWizard(undefined);
+        else switchView(v);
+      });
+    });
+
+    $('btn-new-prospect').addEventListener('click', function(){ openModal('modal-prospect'); });
+    $('btn-add-mini').addEventListener('click', function(){ openModal('modal-prospect'); });
+    document.querySelectorAll('[data-close]').forEach(function(b){
+      b.addEventListener('click', function(){ closeModal(b.dataset.close); });
+    });
+    document.querySelectorAll('.modal-overlay').forEach(function(o){
+      o.addEventListener('click', function(e){ if (e.target === o) o.classList.remove('open'); });
+    });
+    $('btn-save-prospect').addEventListener('click', saveNewProspect);
+
+    // AJOUT : bouton clés API
+    $('btn-open-keys').addEventListener('click', openKeysModal);
+    $('btn-save-keys').addEventListener('click', saveKeys);
+    $('keys-clear').addEventListener('click', clearKeys);
+
+    $('search-input').addEventListener('input', function(e){
+      state.searchQuery = e.target.value;
+      localStorage.setItem('lc_search', state.searchQuery);
+      renderProspectsList();
+    });
+
+    $('prospects-list').addEventListener('click', function(e){
+      var row = e.target.closest('.prospect-row');
+      if (!row) return;
+      selectProspect(parseInt(row.dataset.idx, 10));
+    });
+
+    $('btn-prepare-rdv').addEventListener('click', function(){
+      if (state.selectedProspect === null) return;
+      initWizard(state.selectedProspect);
+    });
+
+    $('btn-wizard-back-to-prospects').addEventListener('click', function(){ switchView('prospects'); });
+    $('btn-next').addEventListener('click', wizardNext);
+    $('btn-prev').addEventListener('click', wizardPrev);
+
+    document.querySelectorAll('.btn-fetch').forEach(function(b){
+      b.addEventListener('click', function(){ fetchCompanyInfo(b.dataset.fetch); });
+    });
+
+    // AJOUT : mode Visio/F2F
+    document.querySelectorAll('#mode-selector .seq-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.querySelectorAll('#mode-selector .seq-btn').forEach(function(x){ x.classList.remove('selected'); });
+        b.classList.add('selected');
+        state.sessionMode = b.dataset.mode;
+        var msg = $('audio-config-msg');
+        var prospectCard = $('prospect-audio-card');
+        if (state.sessionMode === 'f2f') {
+          msg.innerHTML = 'En face-à-face, un seul micro capte les deux voix. Deepgram identifie qui parle automatiquement (identification ~85%).';
+          prospectCard.style.display = 'none';
+        } else {
+          msg.innerHTML = 'Avant de lancer la session, assurez-vous que votre visio est ouverte <strong style="color:var(--ink);">dans un onglet Chrome</strong>. LiveCoach capturera le son de cet onglet pour transcrire le prospect, et votre micro pour vous.';
+          prospectCard.style.display = '';
+        }
+      });
+    });
+
+    document.querySelectorAll('#sequence-selector .seq-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        document.querySelectorAll('#sequence-selector .seq-btn').forEach(function(x){ x.classList.remove('selected'); });
+        b.classList.add('selected');
+        state.sequenceType = b.dataset.seq;
+        state.sequenceConfig = SEQUENCE_CONFIG[state.sequenceType];
+        var sct = $('script-card-title');
+        if (sct) sct.textContent = state.sequenceConfig.scriptLabel + ' (optionnel)';
+      });
+    });
+
+    $('btn-generate-script').addEventListener('click', generateScript);
+
+    var sz = $('script-upload-zone');
+    sz.addEventListener('click', function(){ $('script-file').click(); });
+    $('script-file').addEventListener('change', function(e){ handleScriptUpload(e.target); });
+
+    $('btn-launch').addEventListener('click', launchSession);
+
+    document.querySelectorAll('.phase-pill').forEach(function(p){
+      p.addEventListener('click', function(){ setPhase(parseInt(p.dataset.phase, 10)); });
+    });
+
+    $('btn-start-listen').addEventListener('click', startListening);
+    $('btn-stop-listen').addEventListener('click', function(){
+      stopListening();
+      toast('Écoute arrêtée', 'warning');
+    });
+
+    $('btn-end-session').addEventListener('click', function(){
+      if (confirm('Terminer la session ?')) endSession();
+    });
+
+    // AJOUT : bouton mode oreillette
+    $('btn-audio-mode').addEventListener('click', toggleAudioMode);
+
+    $('btn-regenerate-recap').addEventListener('click', generateRecap);
+    $('btn-back-decouverte').addEventListener('click', function(){ setPhase(1); });
+    $('btn-goto-challenger').addEventListener('click', function(){ setPhase(3); });
+
+    $('btn-back-prospects').addEventListener('click', function(){ switchView('prospects'); });
+    $('btn-export-session').addEventListener('click', exportSession);
+
+    $('btn-confirm-info').addEventListener('click', function(){
+      closeModal('modal-info-needed');
+      var ourProduct = ($('our-product') || {}).value ? $('our-product').value.trim() : '';
+      if (ourProduct.length < 30) goToWizardStep(1);
+      else goToWizardStep(2);
+    });
+
+    bindOurCompanyAutoSave();
+
+    window.addEventListener('beforeunload', function(e){
+      if (state.sessionStartTime && state.transcript.length > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+  }
+
+  function init(){
+    loadPersisted();
+    bindEvents();
+    renderProspectsList();
+
+    // AJOUT : vérifier les clés au chargement — modal immédiat
+    checkKeysAndPrompt();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState !== 'loading') init();
+
+})();
+</script>
+</body>
+</html>
