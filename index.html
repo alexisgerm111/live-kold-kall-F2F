@@ -2554,11 +2554,46 @@ a{color:inherit;text-decoration:none;}
     renderChallengerSteps(container, steps);
   }
 
-  function endSession(){
+    async function endSession(){
     if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
     stopSilenceMonitor();
     stopListening();
     if (state.audioMode && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    var overlay = $('debrief-overlay');
+    if (overlay) overlay.classList.add('visible');
+
+    var coachingId = null;
+    try {
+      var payload = {
+        user_id: window.__lc_auth_user ? window.__lc_auth_user.id : null,
+        prospect_name: (state.selectedProspect !== null && state.prospects[state.selectedProspect]) ? (state.prospects[state.selectedProspect].contact || null) : null,
+        mode: state.sessionMode,
+        sequence_type: state.sequenceType,
+        coaching_data: {
+          our_company: state.ourCompany,
+          prospect: state.selectedProspect !== null ? state.prospects[state.selectedProspect] : null,
+          captured_infos: state.capturedInfos,
+          quality_score: state.qualityScore,
+          recap: lastRecapText
+        },
+        transcript: state.transcript.map(function(t){ return { who: t.who, text: t.text, ts: t.ts }; }),
+        duree_secondes: state.sessionStartTime ? Math.floor((Date.now() - state.sessionStartTime) / 1000) : 0,
+        statut: 'terminee'
+      };
+      var inserted = await window.__lc_sb.from('coachings').insert(payload).select('id').single();
+      if (inserted.error) throw inserted.error;
+      coachingId = inserted.data.id;
+      try {
+        await fetch('https://agent-vocal-39hz.onrender.com/api/coaching/generate-bilan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.__lc_auth_token },
+          body: JSON.stringify({ coachingId: coachingId })
+        });
+      } catch(_) {}
+    } catch(e) {
+      console.error('Save coaching failed', e);
+    }
 
     if (state.selectedProspect !== null && state.prospects[state.selectedProspect]) {
       var p = state.prospects[state.selectedProspect];
