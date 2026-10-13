@@ -2620,9 +2620,16 @@ a{color:inherit;text-decoration:none;}
       if (document.querySelector('.prospect-row.selected')) selectProspect(state.selectedProspect);
     }
 
-    renderDebrief();
-    switchView('debrief');
     state.sessionStartTime = null;
+    if (coachingId) {
+      setTimeout(function(){
+        window.location.href = 'https://alexisgerm111.github.io/daqhboard-kold-kall/?coachingId=' + encodeURIComponent(coachingId);
+      }, 800);
+    } else {
+      if (overlay) overlay.classList.remove('visible');
+      renderDebrief();
+      switchView('debrief');
+    }
   }
 
   function renderDebrief(){
