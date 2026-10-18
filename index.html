@@ -200,7 +200,6 @@ a{color:inherit;text-decoration:none;}
 .silence-alert{display:none;align-items:center;gap:6px;padding:5px 11px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.02em;animation:pulse-amber 1.5s infinite;}
 .silence-alert.visible{display:flex;}
 @keyframes pulse-amber{0%,100%{opacity:1;}50%{opacity:.7;}}
-/* AJOUT : bouton mode oreillette */
 .audio-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--stone-100);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all var(--t-fast);}
 .audio-toggle:hover{background:var(--stone-200);}
 .audio-toggle.on{background:var(--sage);color:#fff;border-color:var(--sage);}
@@ -260,7 +259,6 @@ a{color:inherit;text-decoration:none;}
 .suggestion-pill{padding:10px 14px;background:var(--stone-50);border:1px solid var(--border);border-radius:var(--r-md);font-size:13px;color:var(--ink-2);cursor:pointer;text-align:left;transition:all var(--t-fast);line-height:1.5;}
 .suggestion-pill:hover{background:var(--sage-light);border-color:var(--sage-border);color:var(--ink);}
 .suggestion-pill .pill-tag{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;color:var(--sage);display:block;margin-bottom:3px;letter-spacing:.06em;}
-/* AJOUT : style suggestion oreillette */
 .suggestion-pill.ear{background:var(--sage-light);border-color:var(--sage-border);}
 .new-territory{display:none;align-items:center;gap:8px;padding:8px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--amber);margin-bottom:10px;}
 .new-territory.visible{display:flex;}
@@ -304,7 +302,6 @@ a{color:inherit;text-decoration:none;}
 .modal-close:hover{background:var(--stone-100);color:var(--ink);}
 .modal-body{flex:1;padding:22px 24px;overflow-y:auto;}
 .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;}
-/* AJOUT : modal des clés API */
 #modal-keys .modal{width:480px;}
 #modal-keys .modal-body{padding:24px;}
 .keys-field{margin-bottom:16px;}
@@ -540,7 +537,6 @@ a{color:inherit;text-decoration:none;}
           <div class="w-section-title">Script & lancement</div>
           <div class="w-section-sub">Choisissez le mode de session, le type de séquence, puis préparez votre script (optionnel).</div>
 
-          <!-- AJOUT : sélecteur de mode Visio/F2F -->
           <div class="w-card">
             <div class="w-card-title" style="margin-bottom:14px;">Mode de session</div>
             <div class="sequence-selector" id="mode-selector" style="grid-template-columns:1fr 1fr;">
@@ -657,7 +653,6 @@ a{color:inherit;text-decoration:none;}
       <div class="silence-alert" id="silence-alert">⚡ Laissez parler le prospect</div>
 
       <div class="topbar-spacer"></div>
-      <!-- AJOUT : bouton mode oreillette -->
       <button class="audio-toggle" id="btn-audio-mode" title="Mode oreillette : conseils en audio">
         <div class="audio-dot"></div>🎧 Oreillette
       </button>
@@ -791,7 +786,6 @@ a{color:inherit;text-decoration:none;}
   </div>
 </div>
 
-<!-- AJOUT : modal des clés API -->
 <div class="modal-overlay" id="modal-keys">
   <div class="modal">
     <div class="modal-header">
@@ -799,10 +793,10 @@ a{color:inherit;text-decoration:none;}
       <button class="modal-close" data-close="modal-keys">✕</button>
     </div>
     <div class="modal-body">
-      <div class="w-card-sub" style="margin-bottom:20px;">Ces clés sont stockées uniquement dans ton navigateur (localStorage). Elles ne sont jamais envoyées à un serveur tiers autre que Deepgram et Gemini.</div>
+      <div class="w-card-sub" style="margin-bottom:20px;">Ces clés sont stockées uniquement dans ton navigateur (localStorage). Elles ne sont jamais envoyées à un serveur tiers autre que Groq et Deepgram.</div>
       <div class="keys-field">
-        <label class="w-label">Clé API Gemini</label>
-        <input class="w-input" id="key-gemini" type="password" placeholder="Ta clé Gemini (commence par AIza…)" autocomplete="off">
+        <label class="w-label">Clé API Groq</label>
+        <input class="w-input" id="key-gemini" type="password" placeholder="gsk_…" autocomplete="off">
       </div>
       <div class="keys-field">
         <label class="w-label">Clé API Deepgram</label>
@@ -823,11 +817,41 @@ a{color:inherit;text-decoration:none;}
 (function(){
   'use strict';
 
-  var GEMINI_MODEL = 'gemini-3.8-flash';
-  var GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent';
+  var GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+  var GROQ_MODEL = 'openai/gpt-oss-20b';
   window.__lc_sb = window.supabase.createClient('https://vjvyzbojcbwmfudkamlh.supabase.co','sb_publishable_H-wuFrWTNgDEP0fwSWnqNg_c8dJMQZM');
   window.__lc_auth_token = null;
   window.__lc_auth_user = null;
+
+  async function groqFetch(promptText, opts){
+    opts = opts || {};
+    var maxTokens = opts.maxTokens || 1500;
+    var jsonMode = !!opts.jsonMode;
+    var fast = opts.fast !== false;
+    var gKey = getGroqKey();
+    if (!gKey) throw new Error('Clé Groq manquante');
+    var body = {
+      model: GROQ_MODEL,
+      messages: [{ role: 'user', content: promptText }],
+      max_completion_tokens: maxTokens,
+      reasoning_effort: fast ? 'low' : 'medium',
+      reasoning_format: 'hidden'
+    };
+    if (jsonMode) body.response_format = { type: 'json_object' };
+    var res = await fetch(GROQ_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + gKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
+      throw new Error('HTTP ' + res.status);
+    }
+    var data = await res.json();
+    var text = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : '';
+    if (!text || !text.trim()) throw new Error('Réponse vide');
+    return text.trim();
+  }
 
   var SEQUENCE_CONFIG = {
     cold_call: {
@@ -1079,33 +1103,32 @@ a{color:inherit;text-decoration:none;}
     throw new Error('JSON invalide');
   }
 
-  function getGeminiKey(){ return localStorage.getItem('gemini_key') || ''; }
+  function getGroqKey(){ return localStorage.getItem('groq_key') || ''; }
   function getDeepgramKey(){ return localStorage.getItem('deepgram_key') || ''; }
 
-  // ═══ MODAL DES CLÉS API ═══
   function openKeysModal(){
-    $('key-gemini').value = getGeminiKey();
+    $('key-gemini').value = getGroqKey();
     $('key-deepgram').value = getDeepgramKey();
     openModal('modal-keys');
   }
   function saveKeys(){
     var gk = $('key-gemini').value.trim();
     var dk = $('key-deepgram').value.trim();
-    if (gk) localStorage.setItem('gemini_key', gk); else localStorage.removeItem('gemini_key');
+    if (gk) localStorage.setItem('groq_key', gk); else localStorage.removeItem('groq_key');
     if (dk) localStorage.setItem('deepgram_key', dk); else localStorage.removeItem('deepgram_key');
     closeModal('modal-keys');
     toast('Clés enregistrées', 'success');
   }
   function clearKeys(){
     if (!confirm('Effacer les clés enregistrées ?')) return;
-    localStorage.removeItem('gemini_key');
+    localStorage.removeItem('groq_key');
     localStorage.removeItem('deepgram_key');
     $('key-gemini').value = '';
     $('key-deepgram').value = '';
     toast('Clés effacées', 'warning');
   }
   function checkKeysAndPrompt(){
-    if (!getGeminiKey() || !getDeepgramKey()){
+    if (!getGroqKey() || !getDeepgramKey()){
       openKeysModal();
     }
   }
@@ -1349,8 +1372,8 @@ a{color:inherit;text-decoration:none;}
   }
 
   async function generateScript(){
-    var gKey = getGeminiKey();
-    if (!gKey) { toast('Clé Gemini manquante — clique sur 🔑 Clés API', 'error'); return; }
+    var gKey = getGroqKey();
+    if (!gKey) { toast('Clé Groq manquante — clique sur 🔑 Clés API', 'error'); return; }
     if (!state.sequenceType) { toast('Choisissez d\'abord un type de séquence', 'warning'); return; }
 
     var btn = $('btn-generate-script');
@@ -1386,22 +1409,9 @@ a{color:inherit;text-decoration:none;}
       'Réponds en texte brut uniquement (pas de JSON, pas de markdown).';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
-      });
-      if (!res.ok) {
-        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
-        throw new Error('HTTP ' + res.status);
-      }
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
-      if (!textPart) throw new Error('Pas de réponse');
-
+      var text = await groqFetch(promptText, { maxTokens: 1500, jsonMode: false, fast: true });
       var gs = $('generated-script');
-      gs.value = textPart.text.trim();
+      gs.value = text;
       gs.style.display = 'block';
       state.scriptContent = gs.value;
       toast('Script généré — modifiez-le si besoin', 'success');
@@ -1415,8 +1425,8 @@ a{color:inherit;text-decoration:none;}
   }
 
   async function fetchCompanyInfo(who){
-    var gKey = getGeminiKey();
-    if (!gKey) { toast('Clé Gemini manquante — clique sur 🔑 Clés API', 'error'); return; }
+    var gKey = getGroqKey();
+    if (!gKey) { toast('Clé Groq manquante — clique sur 🔑 Clés API', 'error'); return; }
     var urlInput = $(who === 'our' ? 'our-url' : 'prospect-url');
     var url = urlInput.value.trim();
     if (!url) { toast('Entrez une URL d\'abord', 'warning'); return; }
@@ -1432,20 +1442,8 @@ a{color:inherit;text-decoration:none;}
       '{\n  "name": "Nom",\n  "sector": "Secteur",\n  "product": "Produit/service",\n  "problem_solved": "Problème résolu",\n  "size": "Taille",\n  "key_results": "Résultats clés",\n  "commercial_team": "Équipe commerciale",\n  "suspected_problems": "Problèmes possibles avec la force de vente",\n  "trigger_hypotheses": "Pourquoi intéressé par du coaching commercial maintenant"\n}';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
-      });
-      if (!res.ok) {
-        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
-        throw new Error('HTTP ' + res.status);
-      }
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
-      if (!textPart) throw new Error('Pas de réponse');
-      var parsed = parseGeminiJSON(textPart.text);
+      var text = await groqFetch(promptText, { maxTokens: 1000, jsonMode: true, fast: true });
+      var parsed = parseGeminiJSON(text);
 
       if (who === 'our') {
         if (parsed.name) setVal('our-name', parsed.name);
@@ -1480,8 +1478,8 @@ a{color:inherit;text-decoration:none;}
     card.innerHTML = '<div class="fetch-loading visible" style="gap:10px;margin-top:0;"><div class="spin" style="width:16px;height:16px;"></div>Génération des angles stratégiques en cours…</div>';
     container.style.display = 'none';
 
-    var gKey = getGeminiKey();
-    if (!gKey) { card.innerHTML = '<div style="color:var(--red);font-size:13px;">Clé Gemini manquante — clique sur 🔑 Clés API en haut à droite.</div>'; return; }
+    var gKey = getGroqKey();
+    if (!gKey) { card.innerHTML = '<div style="color:var(--red);font-size:13px;">Clé Groq manquante — clique sur 🔑 Clés API en haut à droite.</div>'; return; }
 
     var our = {
       name: ($('our-name') || {}).value || '',
@@ -1508,20 +1506,8 @@ a{color:inherit;text-decoration:none;}
       '{\n  "angles": [\n    { "mechanism": "RATIONNEL", "title": "Titre 5 mots max", "description": "Pourquoi résonne (2-3 phrases)", "key_stat": "Chiffre clé", "opener": "Phrase d\'ouverture" },\n    { "mechanism": "ÉMOTIONNEL", "title": "...", "description": "...", "key_stat": "...", "opener": "..." },\n    { "mechanism": "COMPÉTITIF", "title": "...", "description": "...", "key_stat": "...", "opener": "..." }\n  ],\n  "triggers": ["Raison 1", "Raison 2", "Raison 3"]\n}';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }], tools: [{ google_search: {} }] })
-      });
-      if (!res.ok) {
-        if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et clique Réessayer');
-        throw new Error('HTTP ' + res.status);
-      }
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
-      if (!textPart) throw new Error('Pas de réponse');
-      var parsed = parseGeminiJSON(textPart.text);
+      var text = await groqFetch(promptText, { maxTokens: 1500, jsonMode: true, fast: true });
+      var parsed = parseGeminiJSON(text);
       state.generatedAngles = parsed.angles || [];
       state.generatedTriggers = parsed.triggers || [];
       state.selectedAngles = state.generatedAngles.map(function(_, i){ return i; });
@@ -1735,7 +1721,6 @@ a{color:inherit;text-decoration:none;}
     if ($('audio-mic')) $('audio-mic').classList.add('active');
     if ($('audio-tab')) $('audio-tab').classList.remove('active');
 
-    // Adapter l'affichage du sélecteur d'onglet selon le mode
     if ($('audio-tab')) $('audio-tab').style.display = (state.sessionMode === 'f2f') ? 'none' : '';
 
     var mb = $('matching-body');
@@ -1796,7 +1781,6 @@ a{color:inherit;text-decoration:none;}
     }
   }
 
-  // ═══ AUDIO ═══
   async function startListening(){
     var dKey = getDeepgramKey();
     if (!dKey) { toast('Clé Deepgram manquante — clique sur 🔑 Clés API', 'error'); return; }
@@ -1806,7 +1790,6 @@ a{color:inherit;text-decoration:none;}
       $('audio-mic').classList.add('active');
 
       var tabStream = null;
-      // En F2F, on ne capture pas l'onglet
       if (state.sessionMode === 'visio') {
         try {
           tabStream = await navigator.mediaDevices.getDisplayMedia({
@@ -1831,7 +1814,6 @@ a{color:inherit;text-decoration:none;}
         connectDeepgram(dKey, micStream, 'commercial');
         if (tabStream) connectDeepgram(dKey, tabStream, 'prospect');
       } else {
-        // F2F : un seul flux avec diarize
         connectDeepgram(dKey, micStream, 'f2f');
       }
 
@@ -1845,7 +1827,6 @@ a{color:inherit;text-decoration:none;}
   }
 
   function connectDeepgram(apiKey, stream, who){
-    // AJOUT : Nova-3 + diarize en F2F
     var url = 'wss://api.deepgram.com/v1/listen?language=fr&model=nova-3&smart_format=true&interim_results=true&punctuate=true&utterance_end_ms=1500';
     if (who === 'f2f') url += '&diarize=true';
 
@@ -1896,7 +1877,6 @@ a{color:inherit;text-decoration:none;}
     if (!text) return;
     var isFinal = msg.is_final;
 
-    // Déterminer le locuteur selon la source
     var speaker = who;
     if (who === 'f2f' && alt.words && alt.words.length) {
       var spk = alt.words[0].speaker;
@@ -2023,12 +2003,11 @@ a{color:inherit;text-decoration:none;}
     if (sa) sa.classList.remove('visible');
   }
 
-  // ═══ DÉSAMBUGUÏSATION LLM (F2F) ═══
   function scheduleLLMRoleDisambiguation(){
     if (state.llmRoleDebounce) clearTimeout(state.llmRoleDebounce);
     state.llmRoleDebounce = setTimeout(async function(){
       if (!state.pendingUnknownSegments.length) return;
-      var gKey = getGeminiKey();
+      var gKey = getGroqKey();
       if (!gKey) return;
 
       var history = state.transcript.slice(-10);
@@ -2045,20 +2024,10 @@ a{color:inherit;text-decoration:none;}
         'Uniquement les tours UNKNOWN.';
 
       try {
-        var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: 300, responseMimeType: 'application/json' } })
-        });
-        if (!res.ok) return;
-        var data = await res.json();
-        var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-          ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
-        if (!textPart) return;
-
+        var text = await groqFetch(prompt, { maxTokens: 300, jsonMode: true, fast: true });
         var parsed = null;
         try {
-          var cleaned = String(textPart.text).trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+          var cleaned = String(text).trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
           parsed = JSON.parse(cleaned);
         } catch(e) { return; }
         if (!parsed.assignments) return;
@@ -2091,7 +2060,6 @@ a{color:inherit;text-decoration:none;}
     turns[index].className = 'turn ' + cls;
   }
 
-  // ═══ MODE OREILLETTE (TTS) ═══
   var ttsVoice = null;
   function pickTTSVoice(){
     if (!('speechSynthesis' in window)) return null;
@@ -2133,7 +2101,6 @@ a{color:inherit;text-decoration:none;}
     }
   }
 
-  // ═══ ANALYSE ═══
   function scheduleAnalysis(){
     if (state.analysisDebounce) clearTimeout(state.analysisDebounce);
     state.analysisDebounce = setTimeout(function(){
@@ -2143,7 +2110,7 @@ a{color:inherit;text-decoration:none;}
   }
 
   async function analyzeConversation(recentTurns){
-    var gKey = getGeminiKey();
+    var gKey = getGroqKey();
     if (!gKey) return;
     var myToken = ++state.analysisToken;
 
@@ -2212,21 +2179,8 @@ a{color:inherit;text-decoration:none;}
       'Ne mets null que si l\'info n\'est vraiment pas présente dans cet extrait.';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-      });
-      if (!res.ok) {
-        if (res.status === 429) console.warn('[Analyse] Gemini 429 — quota temporaire atteint');
-        return;
-      }
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(p){ return p.text; }) : null;
-      if (!textPart) return;
-
-      var parsed = parseGeminiJSON(textPart.text);
+      var text = await groqFetch(promptText, { maxTokens: 1200, jsonMode: true, fast: true });
+      var parsed = parseGeminiJSON(text);
       if (myToken !== state.analysisToken) return;
 
       var count = state.capturedCount;
@@ -2262,11 +2216,9 @@ a{color:inherit;text-decoration:none;}
         }
       }
 
-      // ═══ OREILLETTE ═══
       if (parsed.ear_suggestion && parsed.ear_suggestion.text) {
         var earMsg = parsed.ear_suggestion.text;
         if (state.audioMode) speakEarSuggestion(earMsg);
-        // Ajouter la suggestion oreillette en haut du panneau
         var sp = $('suggestion-pills');
         if (sp) {
           var earEl = document.createElement('button');
@@ -2351,7 +2303,7 @@ a{color:inherit;text-decoration:none;}
   }
 
   async function _buildMatchingPanel(){
-    var gKey = getGeminiKey();
+    var gKey = getGroqKey();
     if (!gKey) return;
     var body = $('matching-body');
     if (!body) return;
@@ -2380,17 +2332,8 @@ a{color:inherit;text-decoration:none;}
       '{\n  "matching": [\n    { "point": "le point exact", "type": "Problème|Solution tentée|Critère", "benefit": "Comment notre solution répond concrètement (1-2 phrases)" }\n  ]\n}';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      if (!res.ok) return;
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
-      if (!textPart) return;
-      var parsed = parseGeminiJSON(textPart.text);
+      var text = await groqFetch(prompt, { maxTokens: 1200, jsonMode: true, fast: true });
+      var parsed = parseGeminiJSON(text);
       body.innerHTML = (parsed.matching || []).map(function(m){
         return '<div class="matching-item">' +
           '<div class="matching-point"><span class="matching-type">' + esc(m.type) + '</span><div class="matching-text">' + esc(m.point) + '</div></div>' +
@@ -2404,7 +2347,7 @@ a{color:inherit;text-decoration:none;}
   }
 
   async function generateRecap(){
-    var gKey = getGeminiKey();
+    var gKey = getGroqKey();
     var recapEl = $('recap-text');
     if (!recapEl) return;
 
@@ -2432,18 +2375,9 @@ a{color:inherit;text-decoration:none;}
       'Utilise les MOTS EXACTS du prospect. Sois concis (150 mots max). Réponds en texte brut uniquement, sans markdown.';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-      });
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
-      if (textPart) {
-        lastRecapText = textPart.text;
-        recapEl.value = lastRecapText;
-      }
+      var text = await groqFetch(promptText, { maxTokens: 600, jsonMode: false, fast: true });
+      lastRecapText = text;
+      recapEl.value = lastRecapText;
     } catch(e) {
       lastRecapText = 'Erreur de génération. Rédigez le récapitulatif manuellement.';
       recapEl.value = lastRecapText;
@@ -2485,7 +2419,7 @@ a{color:inherit;text-decoration:none;}
     if (!seq) return;
     seq.innerHTML = '<div style="padding:20px;color:var(--muted-2);font-size:13px;text-align:center;">Génération de la séquence Challenger…</div>';
 
-    var gKey = getGeminiKey();
+    var gKey = getGroqKey();
     var angle = state.generatedAngles[angleIdx];
     var rawVerbatims = state.transcript
       .filter(function(t){ return t.who === 'prospect'; })
@@ -2510,16 +2444,8 @@ a{color:inherit;text-decoration:none;}
       'Utilise les VERBATIMS EXACTS du prospect entre guillemets. Scripts en français.';
 
     try {
-      var res = await fetch(GEMINI_ENDPOINT + '?key=' + gKey, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
-      });
-      var data = await res.json();
-      var textPart = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts
-        ? data.candidates[0].content.parts.find(function(x){ return x.text; }) : null;
-      if (!textPart) { renderChallengerDefault(seq); return; }
-      var parsed = parseGeminiJSON(textPart.text);
+      var text = await groqFetch(promptText, { maxTokens: 2000, jsonMode: true, fast: true });
+      var parsed = parseGeminiJSON(text);
       renderChallengerSteps(seq, parsed.sequence);
     } catch(e) {
       console.error('challenger', e);
@@ -2720,7 +2646,6 @@ a{color:inherit;text-decoration:none;}
     });
     $('btn-save-prospect').addEventListener('click', saveNewProspect);
 
-    // AJOUT : bouton clés API
     $('btn-open-keys').addEventListener('click', openKeysModal);
     $('btn-save-keys').addEventListener('click', saveKeys);
     $('keys-clear').addEventListener('click', clearKeys);
@@ -2750,7 +2675,6 @@ a{color:inherit;text-decoration:none;}
       b.addEventListener('click', function(){ fetchCompanyInfo(b.dataset.fetch); });
     });
 
-    // AJOUT : mode Visio/F2F
     document.querySelectorAll('#mode-selector .seq-btn').forEach(function(b){
       b.addEventListener('click', function(){
         document.querySelectorAll('#mode-selector .seq-btn').forEach(function(x){ x.classList.remove('selected'); });
@@ -2801,7 +2725,6 @@ a{color:inherit;text-decoration:none;}
       if (confirm('Terminer la session ?')) endSession();
     });
 
-    // AJOUT : bouton mode oreillette
     $('btn-audio-mode').addEventListener('click', toggleAudioMode);
 
     $('btn-regenerate-recap').addEventListener('click', generateRecap);
