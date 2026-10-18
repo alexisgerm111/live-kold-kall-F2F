@@ -199,12 +199,23 @@ a{color:inherit;text-decoration:none;}
 .quality-pct{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--ink-2);min-width:32px;}
 .silence-alert{display:none;align-items:center;gap:6px;padding:5px 11px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.02em;animation:pulse-amber 1.5s infinite;}
 .silence-alert.visible{display:flex;}
+.silence-alert.critique{background:var(--red-bg);border-color:rgba(185,28,28,.25);color:var(--red);}
 @keyframes pulse-amber{0%,100%{opacity:1;}50%{opacity:.7;}}
 .audio-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--stone-100);border:1px solid var(--border-2);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all var(--t-fast);}
 .audio-toggle:hover{background:var(--stone-200);}
 .audio-toggle.on{background:var(--sage);color:#fff;border-color:var(--sage);}
 .audio-toggle.on .audio-dot{background:#fff;animation:pulse-red 1.4s infinite;}
 .audio-dot{width:6px;height:6px;border-radius:50%;background:var(--muted-2);}
+/* NOUVEAU — Signaux timestamp */
+.signals-gauge{display:flex;align-items:center;gap:10px;}
+.signal-block{display:flex;align-items:center;gap:6px;padding:4px 8px;background:var(--stone-50);border:1px solid var(--border);border-radius:var(--r-sm);}
+.signal-block-label{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;}
+.signal-block-value{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:28px;}
+.signal-block-bar{width:36px;height:5px;background:var(--stone-200);border-radius:3px;overflow:hidden;}
+.signal-block-fill{height:100%;background:var(--sage);width:0%;transition:width .4s var(--ease),background .4s var(--ease);}
+.signal-block-fill.warn{background:var(--amber);}
+.signal-block-fill.bad{background:var(--red);}
+.signal-block.critique{border-color:rgba(185,28,28,.25);background:var(--red-bg);}
 .live-body{flex:1;display:grid;grid-template-columns:300px 1fr 340px;overflow:hidden;}
 .col-left{background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
 .col-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
@@ -319,6 +330,7 @@ a{color:inherit;text-decoration:none;}
   .live-body{grid-template-columns:260px 1fr 300px;}
   .detail-body{grid-template-columns:1fr;}
   .sequence-selector{grid-template-columns:repeat(3,1fr);}
+  .signals-gauge{display:none;}
 }
 @media(max-width:900px){
   .live-body{grid-template-columns:1fr;}
@@ -641,6 +653,19 @@ a{color:inherit;text-decoration:none;}
         <span class="debit-wpm" id="debit-wpm">— mpm</span>
       </div>
 
+      <!-- NOUVEAU — Signaux timestamp (ratio parole + questions) -->
+      <div class="signals-gauge">
+        <div class="signal-block" id="signal-ratio-block" title="Ratio de parole commercial / total">
+          <span class="signal-block-label">Ratio</span>
+          <div class="signal-block-bar"><div class="signal-block-fill" id="signal-ratio-fill"></div></div>
+          <span class="signal-block-value" id="signal-ratio-val">—</span>
+        </div>
+        <div class="signal-block" id="signal-q-block" title="Questions posées par le commercial">
+          <span class="signal-block-label">Q?</span>
+          <span class="signal-block-value" id="signal-q-val">0</span>
+        </div>
+      </div>
+
       <div class="quality-gauge">
         <span class="quality-label" id="quality-label">Découverte</span>
         <div class="quality-dots" id="quality-dots">
@@ -823,26 +848,76 @@ a{color:inherit;text-decoration:none;}
   window.__lc_auth_token = null;
   window.__lc_auth_user = null;
 
-  async function groqFetch(promptText, opts){
+  // ════════════════════════════════════════════════════════════════════════
+  //  BANQUE DE SECOURS (fallback si le LLM échoue ou reste muet 3x)
+  // ════════════════════════════════════════════════════════════════════════
+  var FALLBACK_BANK = {
+    cold_call: [
+      { tag: 'CREUSER', text: 'Concrètement, comment vous gérez ça aujourd\'hui ?' },
+      { tag: 'IMPACT', text: 'Ça vous coûte combien par mois, ce problème ?' },
+      { tag: 'PERMISSION', text: 'Ouvert à 15 min pour creuser ça ?' }
+    ],
+    rdv_decouverte: [
+      { tag: 'CREUSER', text: 'Qu\'est-ce que vous voulez dire exactement par là ?' },
+      { tag: 'IMPACT', text: 'Concrètement, ça vous coûte combien par mois ?' },
+      { tag: 'PERROQUET', text: 'Racontez-moi comment ça se passe aujourd\'hui.' }
+    ],
+    rdv_complet: [
+      { tag: 'CREUSER', text: 'Qu\'est-ce que vous voulez dire exactement par là ?' },
+      { tag: 'IMPACT', text: 'Concrètement, ça vous coûte combien par mois ?' },
+      { tag: 'PERROQUET', text: 'Racontez-moi comment ça se passe aujourd\'hui.' }
+    ],
+    rdv_demo: [
+      { tag: 'RÉSONANCE', text: 'Est-ce que ça correspond à ce que vous attendiez ?' },
+      { tag: 'OBJECTION', text: 'Qu\'est-ce qui vous ferait hésiter à aller plus loin ?' },
+      { tag: 'NEXT STEP', text: 'On cale un prochain point pour avancer ?' }
+    ],
+    rdv_closing: [
+      { tag: 'ENJEU', text: 'Qu\'est-ce qui vous ferait dire que c\'est le bon moment ?' },
+      { tag: 'OBJECTION', text: 'Qu\'est-ce qui vous manque pour être à 100% confiant ?' },
+      { tag: 'CLOSE', text: 'On peut démarrer. Je vous envoie le contrat ?' }
+    ]
+  };
+
+  // ════════════════════════════════════════════════════════════════════════
+  //  GROQ FETCH
+  //  opts.returnUsage = true → retourne { text, usage }
+  //  opts.signal       = AbortSignal pour timeout
+  // ════════════════════════════════════════════════════════════════════════
+  async function groqFetch(messagesOrPrompt, opts){
     opts = opts || {};
     var maxTokens = opts.maxTokens || 1500;
     var jsonMode = !!opts.jsonMode;
     var fast = opts.fast !== false;
+    var returnUsage = !!opts.returnUsage;
+    var signal = opts.signal;
     var gKey = getGroqKey();
     if (!gKey) throw new Error('Clé Groq manquante');
+
+    var messages;
+    if (typeof messagesOrPrompt === 'string') {
+      messages = [{ role: 'user', content: messagesOrPrompt }];
+    } else {
+      messages = messagesOrPrompt;
+    }
+
     var body = {
       model: GROQ_MODEL,
-      messages: [{ role: 'user', content: promptText }],
+      messages: messages,
       max_completion_tokens: maxTokens,
       reasoning_effort: fast ? 'low' : 'medium',
       reasoning_format: 'hidden'
     };
     if (jsonMode) body.response_format = { type: 'json_object' };
-    var res = await fetch(GROQ_ENDPOINT, {
+
+    var fetchOpts = {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + gKey, 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
-    });
+    };
+    if (signal) fetchOpts.signal = signal;
+
+    var res = await fetch(GROQ_ENDPOINT, fetchOpts);
     if (!res.ok) {
       if (res.status === 429) throw new Error('Trop de requêtes — attends 30s et réessaie');
       throw new Error('HTTP ' + res.status);
@@ -850,7 +925,12 @@ a{color:inherit;text-decoration:none;}
     var data = await res.json();
     var text = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : '';
     if (!text || !text.trim()) throw new Error('Réponse vide');
-    return text.trim();
+    text = text.trim();
+
+    if (returnUsage) {
+      return { text: text, usage: data.usage || null };
+    }
+    return text;
   }
 
   var SEQUENCE_CONFIG = {
@@ -1058,7 +1138,19 @@ a{color:inherit;text-decoration:none;}
     sessionData: null,
     audioMode: false,
     pendingUnknownSegments: [],
-    llmRoleDebounce: null
+    llmRoleDebounce: null,
+    // NOUVEAU — état pour les 10 modifs
+    isAnalyzing: false,
+    consecutiveEmpty: 0,
+    lastSuggestionAt: 0,
+    // Signaux timestamp
+    prospectWords: 0,
+    commercialWords: 0,
+    questionsCount: 0,
+    lastSilenceAlertText: '',
+    // Session prompt cache — offset du transcript déjà envoyé (append-only)
+    lastTranscriptLengthSent: 0,
+    lastPromptStaticKey: null
   };
 
   var lastRecapText = '';
@@ -1630,7 +1722,7 @@ a{color:inherit;text-decoration:none;}
     if (rct) rct.textContent = config.scriptLabel || 'Script';
 
     var sp = $('suggestion-pills');
-    sp.innerHTML = config.defaultSuggestions.map(function(s){
+    sp.innerHTML = config.defaultSuggestions.slice(0, 1).map(function(s){
       return '<button class="suggestion-pill"><span class="pill-tag">' + esc(s.tag) + '</span>' + esc(s.text) + '</button>';
     }).join('');
 
@@ -1683,6 +1775,7 @@ a{color:inherit;text-decoration:none;}
     setPhase(1);
     startTimer();
     startSilenceMonitor();
+    updateTimestampSignals();
   }
 
   function resetSessionState(){
@@ -1703,6 +1796,14 @@ a{color:inherit;text-decoration:none;}
     state.phase = 1;
     state.selectedChallengerAngle = 0;
     state.pendingUnknownSegments = [];
+    state.isAnalyzing = false;
+    state.consecutiveEmpty = 0;
+    state.lastSuggestionAt = 0;
+    state.prospectWords = 0;
+    state.commercialWords = 0;
+    state.questionsCount = 0;
+    state.lastTranscriptLengthSent = 0;
+    state.lastPromptStaticKey = null;
     if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
     stopListening();
 
@@ -1717,6 +1818,9 @@ a{color:inherit;text-decoration:none;}
     var sa = $('suggestions-age'); if (sa) sa.textContent = '';
     var lt = $('live-timer'); if (lt) lt.textContent = '00:00';
     var rt = $('recap-text'); if (rt) rt.value = '';
+    var rv = $('signal-ratio-val'); if (rv) rv.textContent = '—';
+    var rf = $('signal-ratio-fill'); if (rf) { rf.style.width = '0%'; rf.className = 'signal-block-fill'; }
+    var qv = $('signal-q-val'); if (qv) qv.textContent = '0';
     lastRecapText = '';
     if ($('audio-mic')) $('audio-mic').classList.add('active');
     if ($('audio-tab')) $('audio-tab').classList.remove('active');
@@ -1827,7 +1931,8 @@ a{color:inherit;text-decoration:none;}
   }
 
   function connectDeepgram(apiKey, stream, who){
-    var url = 'wss://api.deepgram.com/v1/listen?language=fr&model=nova-3&smart_format=true&interim_results=true&punctuate=true&utterance_end_ms=1500';
+    // MODIF : endpointing=700 au lieu du défaut (1500) — gain de 0,8s par appel
+    var url = 'wss://api.deepgram.com/v1/listen?language=fr&model=nova-3&smart_format=true&interim_results=true&punctuate=true&utterance_end_ms=1000&endpointing=700';
     if (who === 'f2f') url += '&diarize=true';
 
     var ws = new WebSocket(url, ['token', apiKey]);
@@ -1891,7 +1996,10 @@ a{color:inherit;text-decoration:none;}
     } else {
       clearInterim(speaker);
       addTurnAccumulated(text, speaker);
-      scheduleAnalysis();
+      // MODIF : déclencher seulement si c'est le prospect qui parle
+      if (speaker === 'prospect') {
+        scheduleAnalysis();
+      }
       if (speaker === 'unknown') {
         state.pendingUnknownSegments.push({ index: state.transcript.length - 1, text: text });
         scheduleLLMRoleDisambiguation();
@@ -1899,7 +2007,9 @@ a{color:inherit;text-decoration:none;}
       if (speaker === 'commercial') {
         var sa = $('silence-alert');
         if (sa) sa.classList.remove('visible');
+        trackSpeechRate(alt.words || []);
       }
+      updateTimestampSignals();
     }
   }
 
@@ -1942,6 +2052,14 @@ a{color:inherit;text-decoration:none;}
         if (bubbleEl) bubbleEl.textContent = bubble.text;
         lastTurn.text = bubble.text;
         lastTurn.ts = now;
+        // Mise à jour compteurs de mots
+        var addWords = text.split(/\s+/).filter(Boolean).length;
+        if (who === 'commercial') {
+          state.commercialWords += addWords;
+          state.questionsCount += (text.match(/\?/g) || []).length;
+        } else if (who === 'prospect') {
+          state.prospectWords += addWords;
+        }
         scrollTranscript();
         return;
       }
@@ -1959,6 +2077,14 @@ a{color:inherit;text-decoration:none;}
     zone.appendChild(el);
     state.currentBubbles[who] = { el: el, text: text, startedAt: Date.now() };
     state.transcript.push({ text: text, who: who, ts: now });
+    // Compteurs de mots
+    var wCount = text.split(/\s+/).filter(Boolean).length;
+    if (who === 'commercial') {
+      state.commercialWords += wCount;
+      state.questionsCount += (text.match(/\?/g) || []).length;
+    } else if (who === 'prospect') {
+      state.prospectWords += wCount;
+    }
     scrollTranscript();
   }
 
@@ -1983,6 +2109,30 @@ a{color:inherit;text-decoration:none;}
     else { fill.style.background = 'var(--red)'; wpmEl.style.color = 'var(--red)'; }
   }
 
+  // NOUVEAU — Signaux timestamp (gratuits, basés sur les compteurs)
+  function updateTimestampSignals(){
+    var total = state.commercialWords + state.prospectWords;
+    var ratio = total > 0 ? Math.round((state.commercialWords / total) * 100) : 0;
+    var ratioVal = $('signal-ratio-val');
+    var ratioFill = $('signal-ratio-fill');
+    var ratioBlock = $('signal-ratio-block');
+    if (ratioVal) ratioVal.textContent = total > 0 ? ratio + '%' : '—';
+    if (ratioFill) {
+      ratioFill.style.width = total > 0 ? Math.min(100, ratio) + '%' : '0%';
+      // Rouge si commercial parle > 70% (déséquilibre)
+      if (ratio > 70) ratioFill.className = 'signal-block-fill bad';
+      else if (ratio > 55) ratioFill.className = 'signal-block-fill warn';
+      else ratioFill.className = 'signal-block-fill';
+    }
+    if (ratioBlock) ratioBlock.classList.toggle('critique', ratio > 70 && total > 30);
+
+    var qv = $('signal-q-val');
+    if (qv) qv.textContent = state.questionsCount;
+    var qBlock = $('signal-q-block');
+    // Alerte rouge si aucune question posée après 20+ mots du commercial
+    if (qBlock) qBlock.classList.toggle('critique', state.questionsCount === 0 && state.commercialWords > 60);
+  }
+
   function startSilenceMonitor(){
     if (state.silenceInterval) clearInterval(state.silenceInterval);
     state.silenceInterval = setInterval(function(){
@@ -1992,7 +2142,26 @@ a{color:inherit;text-decoration:none;}
       var cc = recent.filter(function(t){ return t.who === 'commercial'; }).length;
       if (cc >= 3) {
         var el = $('silence-alert');
-        if (el) { el.classList.add('visible'); setTimeout(function(){ el.classList.remove('visible'); }, 5000); }
+        if (el) {
+          // MODIF : texte intelligent selon le contexte
+          var lastProspectTurn = null;
+          for (var i = state.transcript.length - 1; i >= 0; i--) {
+            if (state.transcript[i].who === 'prospect') { lastProspectTurn = state.transcript[i]; break; }
+          }
+          var msg = '⚡ Laissez parler le prospect';
+          var critical = false;
+          if (lastProspectTurn && /\?/.test(lastProspectTurn.text)) {
+            msg = '⚡ Silence après une question du prospect — répondez';
+            critical = true;
+          } else if (state.capturedInfos.price) {
+            msg = '⚡ Silence après prix — le prospect digère';
+            critical = true;
+          }
+          el.textContent = msg;
+          el.classList.toggle('critique', critical);
+          el.classList.add('visible');
+          setTimeout(function(){ el.classList.remove('visible'); }, 5000);
+        }
       }
     }, 15000);
   }
@@ -2101,25 +2270,28 @@ a{color:inherit;text-decoration:none;}
     }
   }
 
+  // ════════════════════════════════════════════════════════════════════════
+  //  MODIFS — scheduleAnalysis + analyzeConversation
+  // ════════════════════════════════════════════════════════════════════════
+
   function scheduleAnalysis(){
     if (state.analysisDebounce) clearTimeout(state.analysisDebounce);
     state.analysisDebounce = setTimeout(function(){
+      // MODIF : vérifier que le dernier tour du prospect fait au moins 6 mots
+      var lastProspect = null;
+      for (var i = state.transcript.length - 1; i >= 0; i--) {
+        if (state.transcript[i].who === 'prospect') { lastProspect = state.transcript[i]; break; }
+      }
+      if (!lastProspect) return;
+      var wc = lastProspect.text.split(/\s+/).filter(Boolean).length;
+      if (wc < 6) return;
       var recent = state.transcript.slice(-8);
       if (recent.length) analyzeConversation(recent);
-    }, 1500);
+    }, 700);
   }
 
-  async function analyzeConversation(recentTurns){
-    var gKey = getGroqKey();
-    if (!gKey) return;
-    var myToken = ++state.analysisToken;
-
-    var currentInfos = JSON.parse(JSON.stringify(state.capturedInfos));
-    var transcript = recentTurns.map(function(t){
-      var who = t.who === 'commercial' ? 'COMMERCIAL' : t.who === 'prospect' ? 'PROSPECT' : 'UNKNOWN';
-      return who + ': ' + t.text;
-    }).join('\n');
-
+  // Construit la partie STATIQUE du prompt (identique entre appels → cache Groq)
+  function buildStaticAnalysisPrompt(){
     var prospectCtx = {
       company: ($('p-company') || {}).value || '',
       problems: ($('p-problems') || {}).value || '',
@@ -2133,14 +2305,18 @@ a{color:inherit;text-decoration:none;}
     };
     var config = state.sequenceConfig || SEQUENCE_CONFIG.rdv_complet;
 
-    var promptText = 'Tu es un coach commercial expert. Analyse cet extrait de conversation et réponds UNIQUEMENT en JSON valide sans markdown.\n\n' +
-      'TYPE DE SÉQUENCE : ' + config.label + '\n' +
-      'NOTRE OFFRE : ' + JSON.stringify(ourCtx) + '\n' +
-      'CONTEXTE PROSPECT : ' + JSON.stringify(prospectCtx) + '\n' +
-      'INFOS DÉJÀ CAPTÉES : ' + JSON.stringify(currentInfos) + '\n\n' +
-      'EXTRAIT :\n' + transcript + '\n\n' +
-      'Réponds avec :\n' +
+    return 'Tu es un coach commercial expert. Tu analyses la conversation en direct et tu fournis UNE SEULE suggestion de relance, ultra concise, à afficher au commercial.\n\n' +
+
+      'RÈGLE ABSOLUE DE FORMAT :\n' +
+      '- Réponds UNIQUEMENT avec un objet JSON valide, sans markdown.\n' +
+      '- Maximum 8 mots pour la suggestion (tag + text combinés).\n' +
+      '- Format de la suggestion : "INTENTION → phrase courte". Exemple : "CREUSER → combien ça vous coûte par mois ?".\n\n' +
+
+      'SORTIE ATTENDUE :\n' +
       '{\n' +
+      '  "should_speak": true | false,\n' +
+      '  "confidence": 0-100,\n' +
+      '  "suggestion": { "tag": "INTENTION", "text": "phrase ≤ 8 mots" },\n' +
       '  "new_infos": {\n' +
       '    "company": "info entreprise si nouvelle",\n' +
       '    "problem": "problème identifié si nouveau",\n' +
@@ -2158,31 +2334,81 @@ a{color:inherit;text-decoration:none;}
       '    "objection": "objection si détectée",\n' +
       '    "decision": "décision si prise"\n' +
       '  },\n' +
-      '  "suggestions": [\n' +
-      '    { "tag": "TYPE DE RELANCE EN MAJUSCULES", "text": "Phrase exacte à dire par le commercial" }\n' +
-      '  ],\n' +
-      '  "ear_suggestion": {\n' +
-      '    "tag": "TYPE",\n' +
-      '    "text": "LA PHRASE EXACTE à dire au prospect, mot pour mot, telle qu\'un top sales la soufflerait à l\'oreille. Max 20 mots. Naturel. Si rien d\'utile : \'text\' vide."\n' +
-      '  },\n' +
-      '  "quality_score": 0,\n' +
-      '  "current_script_step": "' + config.scriptBlocks[0].tag + '|...",\n' +
+      '  "quality_score": 0-6,\n' +
+      '  "current_script_step": "NOM DU BLOC",\n' +
       '  "is_off_script": false,\n' +
       '  "off_script_note": ""\n' +
-      '}\n' +
-      'Pour quality_score : compte combien des critères suivants sont couverts : ' + config.qualityCriteria.join(', ') + '. Score 0 à 6.\n' +
-      'Pour suggestions : max 3, ultra pertinentes par rapport à ce qui vient d\'être dit.\n' +
-      'Pour ear_suggestion : la phrase la plus utile À DIRE MAINTENANT au prospect. Si rien d\'utile, mets "text": "".\n' +
-      'Pour current_script_step : indique quel bloc du script est en cours (le plus avancé atteint).\n' +
-      'Pour is_off_script : true si le prospect part dans un territoire inattendu.\n' +
-      config.analysisExtra + '\n' +
-      'Ne mets null que si l\'info n\'est vraiment pas présente dans cet extrait.';
+      '}\n\n' +
+
+      'RÈGLES DE DÉCISION :\n' +
+      '- should_speak = false si le dernier tour du prospect ne demande AUCUNE réaction utile (acquiescement, bruit de fond, fragment incomplet).\n' +
+      '- confidence < 60 si tu n\'es pas sûr que la suggestion change le cours de l\'entretien.\n' +
+      '- Ne répète jamais une info déjà dans "INFOS DÉJÀ CAPTÉES".\n' +
+      '- Ne propose pas "creuser l\'impact" si l\'impact est déjà capté.\n' +
+      '- Utilise les mots exacts du prospect quand tu peux (reformulation ancrée).\n\n' +
+
+      'CONTEXTE PROSPECT :\n' + JSON.stringify(prospectCtx) + '\n\n' +
+      'NOTRE OFFRE :\n' + JSON.stringify(ourCtx) + '\n\n' +
+      'TYPE DE SÉQUENCE : ' + config.label + '\n' +
+      'CRITÈRES QUALITÉ À COUVRIR : ' + config.qualityCriteria.join(', ') + '\n' +
+      (config.analysisExtra ? config.analysisExtra + '\n' : '') +
+      '\n--- FIN DE LA PARTIE STATIQUE ---';
+  }
+
+  async function analyzeConversation(recentTurns){
+    // MODIF : verrou anti-chevauchement
+    if (state.isAnalyzing) return;
+    state.isAnalyzing = true;
+
+    var gKey = getGroqKey();
+    if (!gKey) { state.isAnalyzing = false; return; }
+
+    var myToken = ++state.analysisToken;
+    var startTime = Date.now();
+    var abortCtrl = new AbortController();
+    var abortTimer = setTimeout(function(){ abortCtrl.abort(); }, 8000);
+    var reason = 'ok';
 
     try {
-      var text = await groqFetch(promptText, { maxTokens: 1200, jsonMode: true, fast: true });
-      var parsed = parseGeminiJSON(text);
-      if (myToken !== state.analysisToken) return;
+      // Prompt caching : system = statique (identique) + user = variable (transcript + infos)
+      var staticSystem = buildStaticAnalysisPrompt();
 
+      var transcriptText = recentTurns.map(function(t){
+        var who = t.who === 'commercial' ? 'COMMERCIAL' : t.who === 'prospect' ? 'PROSPECT' : 'UNKNOWN';
+        return who + ': ' + t.text;
+      }).join('\n');
+
+      var currentInfos = JSON.parse(JSON.stringify(state.capturedInfos));
+      var capturedKeys = Object.keys(currentInfos).filter(function(k){ return currentInfos[k]; });
+      var capturedStr = capturedKeys.length
+        ? capturedKeys.map(function(k){ return k + '=' + currentInfos[k]; }).join(' | ')
+        : '(aucune)';
+
+      var userMessage =
+        'INFOS DÉJÀ CAPTÉES : ' + capturedStr + '\n\n' +
+        'TRANSCRIPT (8 derniers tours) :\n' + transcriptText + '\n\n' +
+        'Analyse maintenant et renvoie le JSON.';
+
+      var result = await groqFetch(
+        [
+          { role: 'system', content: staticSystem },
+          { role: 'user', content: userMessage }
+        ],
+        {
+          maxTokens: 500,
+          jsonMode: true,
+          fast: true,
+          returnUsage: true,
+          signal: abortCtrl.signal
+        }
+      );
+
+      clearTimeout(abortTimer);
+
+      var parsed = parseGeminiJSON(result.text);
+      if (myToken !== state.analysisToken) { reason = 'stale'; return; }
+
+      // Mise à jour des infos captées (panneau gauche) — toujours
       var count = state.capturedCount;
       Object.entries(parsed.new_infos || {}).forEach(function(entry){
         var key = entry[0], val = entry[1];
@@ -2200,9 +2426,33 @@ a{color:inherit;text-decoration:none;}
         state.qualityScore = Math.min(6, Math.max(0, parsed.quality_score));
         updateQualityScore(state.qualityScore);
       }
+      if (parsed.current_script_step) advanceScript(parsed.current_script_step);
+      if (parsed.is_off_script) {
+        var nt = $('new-territory-alert');
+        if (nt) {
+          nt.textContent = '⚡ ' + (parsed.off_script_note || 'Territoire inattendu — adaptation en cours');
+          nt.classList.add('visible');
+          setTimeout(function(){ nt.classList.remove('visible'); }, 8000);
+        }
+      }
 
-      if (Array.isArray(parsed.suggestions) && parsed.suggestions.length) {
-        updateSuggestions(parsed.suggestions);
+      // Décision d'affichage : should_speak + confidence
+      var shouldSpeak = parsed.should_speak !== false;
+      var confidence = typeof parsed.confidence === 'number' ? parsed.confidence : 100;
+      var suggestion = parsed.suggestion;
+
+      if (!shouldSpeak) { reason = 'should_speak_false'; }
+      else if (confidence < 60) { reason = 'low_confidence'; }
+      else if (!suggestion || !suggestion.text) { reason = 'empty_suggestion'; }
+      else {
+        // AFFICHER LA SUGGESTION UNIQUE
+        var zone = $('suggestion-pills');
+        if (zone) {
+          var tag = suggestion.tag || 'RELANCE';
+          zone.innerHTML = '<button class="suggestion-pill ear"><span class="pill-tag">' + esc(tag) + '</span>' + esc(suggestion.text) + '</button>';
+        }
+        if (state.audioMode) speakEarSuggestion(suggestion.text);
+
         var age = $('suggestions-age');
         if (age) {
           age.textContent = 'il y a 0s';
@@ -2214,37 +2464,70 @@ a{color:inherit;text-decoration:none;}
             if (s > 30) clearInterval(age._iv);
           }, 1000);
         }
+
+        state.lastSuggestionAt = Date.now();
+        state.consecutiveEmpty = 0;
       }
 
-      if (parsed.ear_suggestion && parsed.ear_suggestion.text) {
-        var earMsg = parsed.ear_suggestion.text;
-        if (state.audioMode) speakEarSuggestion(earMsg);
-        var sp = $('suggestion-pills');
-        if (sp) {
-          var earEl = document.createElement('button');
-          earEl.className = 'suggestion-pill ear';
-          earEl.innerHTML = '<span class="pill-tag">🎧 ' + esc(parsed.ear_suggestion.tag || 'OREILLETTE') + '</span>' + esc(earMsg);
-          sp.insertBefore(earEl, sp.firstChild);
-          while (sp.children.length > 5) sp.removeChild(sp.lastChild);
+      // Fallback : 3 fois de suite rien d'utile → proposer une phrase de la banque
+      if (reason !== 'ok') {
+        state.consecutiveEmpty++;
+        if (state.consecutiveEmpty >= 3) {
+          var bank = FALLBACK_BANK[state.sequenceType] || FALLBACK_BANK.rdv_decouverte;
+          var fb = bank[Math.floor(Math.random() * bank.length)];
+          var zone2 = $('suggestion-pills');
+          if (zone2) {
+            zone2.innerHTML = '<button class="suggestion-pill"><span class="pill-tag">' + esc(fb.tag) + '</span>' + esc(fb.text) + '</button>';
+          }
+          state.consecutiveEmpty = 0;
+          reason = 'fallback_bank';
         }
-      }
-
-      if (parsed.current_script_step) advanceScript(parsed.current_script_step);
-
-      if (parsed.is_off_script) {
-        var nt = $('new-territory-alert');
-        if (nt) {
-          nt.textContent = '⚡ ' + (parsed.off_script_note || 'Territoire inattendu — adaptation en cours');
-          nt.classList.add('visible');
-          setTimeout(function(){ nt.classList.remove('visible'); }, 8000);
-        }
+      } else {
+        state.consecutiveEmpty = 0;
       }
 
       if (['rdv_demo', 'rdv_complet', 'rdv_closing'].indexOf(state.sequenceType) > -1) buildMatchingPanel();
       updateSynthesisBlock();
-    } catch(e) {
-      console.warn('analyzeConversation', e);
+
+      // LOG DE MESURE
+      logMeter({
+        route: 'analyzeConversation',
+        ttft_ms: null,
+        total_ms: Date.now() - startTime,
+        input_tokens: result.usage && result.usage.prompt_tokens,
+        output_tokens: result.usage && result.usage.completion_tokens,
+        cached_tokens: result.usage && result.usage.prompt_tokens_details && result.usage.prompt_tokens_details.cached_tokens,
+        shown: reason === 'ok' || reason === 'fallback_bank',
+        confidence: confidence,
+        reason: reason
+      });
+
+    } catch (err) {
+      clearTimeout(abortTimer);
+      var isAbort = err && err.name === 'AbortError';
+      var errReason = isAbort ? 'timeout' : 'error';
+      logMeter({
+        route: 'analyzeConversation',
+        total_ms: Date.now() - startTime,
+        input_tokens: null,
+        output_tokens: null,
+        cached_tokens: null,
+        shown: false,
+        confidence: null,
+        reason: errReason,
+        error: err && err.message
+      });
+      // Fallback si erreur : ne pas afficher de toute façon
+    } finally {
+      state.isAnalyzing = false;
     }
+  }
+
+  // Log structuré pour analyse post-session
+  function logMeter(entry){
+    try {
+      console.log('[KK-METER] ' + JSON.stringify(entry));
+    } catch(_) {}
   }
 
   function updateInfoCard(key, val){
@@ -2263,14 +2546,6 @@ a{color:inherit;text-decoration:none;}
     document.querySelectorAll('.qdot').forEach(function(d, i){ d.classList.toggle('filled', i < score); });
     var qp = $('quality-pct');
     if (qp) qp.textContent = score + ' / 6';
-  }
-
-  function updateSuggestions(suggestions){
-    var zone = $('suggestion-pills');
-    if (!zone) return;
-    zone.innerHTML = suggestions.map(function(s){
-      return '<button class="suggestion-pill"><span class="pill-tag">' + esc(s.tag || 'SUGGESTION') + '</span>' + esc(s.text || '') + '</button>';
-    }).join('');
   }
 
   function advanceScript(step){
