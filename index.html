@@ -3141,10 +3141,34 @@ a{color:inherit;text-decoration:none;}
     }
   }
 
-  // Log structuré pour analyse post-session
-  function logMeter(entry){
+  // Log structuré + remontée au serveur pour mesure admin
+  async function logMeter(entry){
     try {
       console.log('[KK-METER] ' + JSON.stringify(entry));
+      const token = window.__lc_auth_token;
+      if (!token) return;
+      await fetch('https://agent-vocal-39hz.onrender.com/api/consumption/log', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          provider: 'groq',
+          route: entry.route || 'live_analysis',
+          model: 'openai/gpt-oss-20b',
+          prompt_tokens: entry.input_tokens || 0,
+          completion_tokens: entry.output_tokens || 0,
+          cached_tokens: entry.cached_tokens || 0,
+          metadata: {
+            reason: entry.reason || null,
+            confidence: entry.confidence ?? null,
+            total_ms: entry.total_ms ?? null,
+            shown: entry.shown ?? null,
+            error: entry.error || null
+          }
+        })
+      });
     } catch(_) {}
   }
 
